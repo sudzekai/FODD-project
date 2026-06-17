@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="API/API.csproj" />
+  <Project Path="DB/DB.csproj" />
+  <Project Path="Services/Services.csproj" />
+  <Project Path="Shared/Shared.csproj" />
+  <Project Path="WEB/WEB.csproj" />
+</Solution>
