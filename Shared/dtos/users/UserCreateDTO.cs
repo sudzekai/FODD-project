@@ -15,7 +15,7 @@ namespace Shared.dtos.users
         }
 
         [Required(ErrorMessage = "Login обязателен")]
-        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]$", ErrorMessage = "Введите корректный Login")]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$", ErrorMessage = "Введите корректный Login")]
         [StringLength(255, MinimumLength = 5, ErrorMessage = "Login должен быть длиной от 5 до 255 символов")]
         public string Login { get; set; }
 

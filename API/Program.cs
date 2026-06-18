@@ -27,12 +27,53 @@ namespace API
             builder.Services.AddControllers(opt =>
             {
                 opt.ModelBindingMessageProvider.SetValueIsInvalidAccessor(value =>
-                    $"Значение '{value}' не является корректным."
+                    $"Значение '{value}' некорректно."
                 );
 
                 opt.ModelBindingMessageProvider.SetValueMustBeANumberAccessor(value =>
                     $"Значение '{value}' должно быть числом."
                 );
+
+                opt.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(_ =>
+                    "Значение не должно быть null."
+                );
+
+                opt.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((value, fieldName) =>
+                    $"Значение '{value}' некорректно для поля '{fieldName}'."
+                );
+
+                opt.ModelBindingMessageProvider.SetUnknownValueIsInvalidAccessor(fieldName =>
+                    $"Указано некорректное значение для поля '{fieldName}'."
+                );
+
+                opt.ModelBindingMessageProvider.SetMissingBindRequiredValueAccessor(fieldName =>
+                    $"Поле '{fieldName}' является обязательным."
+                );
+
+                opt.ModelBindingMessageProvider.SetMissingKeyOrValueAccessor(() =>
+                    "Отсутствует ключ или значение."
+                );
+
+                opt.ModelBindingMessageProvider.SetMissingRequestBodyRequiredValueAccessor(() =>
+                    "Тело запроса обязательно."
+                );
+
+                opt.ModelBindingMessageProvider.SetNonPropertyAttemptedValueIsInvalidAccessor(value =>
+                    $"Значение '{value}' некорректно."
+                );
+
+                opt.ModelBindingMessageProvider.SetNonPropertyUnknownValueIsInvalidAccessor(() =>
+                    "Указано некорректное значение."
+                );
+
+                opt.ModelBindingMessageProvider.SetNonPropertyValueMustBeANumberAccessor(() =>
+                    "Значение должно быть числом."
+                );
+
+                opt.ModelBindingMessageProvider.SetValueMustBeANumberAccessor(value =>
+                    $"Значение '{value}' должно быть числом."
+                );
+
             }).AddJsonOptions(opt =>
                 {
                     opt.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;

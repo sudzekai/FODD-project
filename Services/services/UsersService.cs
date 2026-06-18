@@ -19,7 +19,7 @@ namespace Services.services
             _uow = uow;
         }
 
-        public async Task<List<UserSimpleDTO>> GetUsersAsync(GetListParameters req)
+        public async Task<List<UserSimpleDTO>> GetUsersAsync(GetListRequest req)
         {
             var query = _users.AsQueryable();
 
@@ -88,7 +88,7 @@ namespace Services.services
             }
             catch (Exception)
             {
-                throw new InternalServerException("Возникла ошибка при создании пользователя");
+                throw new InternalServerException($"Возникла ошибка при создании пользователя");
             }
 
             return created.Entity.Id;

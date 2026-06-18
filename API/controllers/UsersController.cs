@@ -1,5 +1,4 @@
 ﻿using API.helpers;
-using API.requests;
 using Microsoft.AspNetCore.Mvc;
 using Services.interfaces;
 using Shared.dtos.users;
@@ -27,9 +26,9 @@ namespace API.controllers
 
             try
             {
-                GetListParameters parameters = new(
-                    request.GetOffset(),
-                    request.GetLimit(),
+                GetListRequest parameters = new(
+                    request.Offset,
+                    request.Limit,
                     request.SearchTerm,
                     request.OrderDirection
                 );
@@ -46,14 +45,18 @@ namespace API.controllers
         }
 
         [HttpGet(template: "{id}", Name = "GetUserById")]
-        public async Task<IActionResult> GetUserById([FromRoute] IdRequest request)
+        public async Task<IActionResult> GetUserById(
+            [FromRoute]
+            [Required(ErrorMessage = "Id обязателен")]
+            [Range(1, int.MaxValue, ErrorMessage = "Id должен быть больше 0")]
+            int id)
         {
             if (RequestValidator.ValidateModel(ModelState) is var errors && errors.Count > 0)
                 return ResponseBuilder.BuildBadRequestErrors(errors);
 
             try
             {
-                var data = await _svc.GetUserByIdAsync(request.GetId());
+                var data = await _svc.GetUserByIdAsync(id);
 
                 return ResponseBuilder.BuildOk(data);
             }
@@ -88,7 +91,10 @@ namespace API.controllers
 
         [HttpPut("{id}", Name = "PutUserById")]
         public async Task<IActionResult> PutUserById(
-            [FromRoute] IdRequest request,
+            [FromRoute]
+            [Required(ErrorMessage = "Id обязателен")]
+            [Range(1, int.MaxValue, ErrorMessage = "Id должен быть больше 0")]
+            int id,
             [Required(ErrorMessage = "Данные пользователя (login, password, fullName) обязательны")]
             [FromBody] UserUpdateDTO user)
         {
@@ -97,7 +103,7 @@ namespace API.controllers
 
             try
             {
-                await _svc.UpdateUserByIdAsync(request.GetId(), user);
+                await _svc.UpdateUserByIdAsync(id, user);
 
                 return ResponseBuilder.BuildOk<object?>(null);
             }
@@ -110,7 +116,10 @@ namespace API.controllers
 
         [HttpPut("{id}/password", Name = "PutUserPasswordById")]
         public async Task<IActionResult> PutUserPasswordById(
-            [FromRoute] IdRequest request,
+            [FromRoute]
+            [Required(ErrorMessage = "Id обязателен")]
+            [Range(1, int.MaxValue, ErrorMessage = "Id должен быть больше 0")]
+            int id,
             [Required(ErrorMessage = "Данные пользователя (password) обязательны")]
             [FromBody] UserPasswordUpdateDTO user)
         {
@@ -119,7 +128,7 @@ namespace API.controllers
 
             try
             {
-                await _svc.UpdateUserPasswordByIdAsync(request.GetId(), user);
+                await _svc.UpdateUserPasswordByIdAsync(id, user);
 
                 return ResponseBuilder.BuildOk<object?>(null);
             }
@@ -132,7 +141,10 @@ namespace API.controllers
 
         [HttpPut("{id}/role", Name = "PutUserRoleById")]
         public async Task<IActionResult> PutUserRoleById(
-            [FromRoute] IdRequest request,
+            [FromRoute]
+            [Required(ErrorMessage = "Id обязателен")]
+            [Range(1, int.MaxValue, ErrorMessage = "Id должен быть больше 0")]
+            int id,
             [Required(ErrorMessage = "Данные пользователя (roleId) обязательны")]
             [FromBody] UserPasswordUpdateDTO user)
         {
@@ -141,7 +153,7 @@ namespace API.controllers
 
             try
             {
-                await _svc.UpdateUserPasswordByIdAsync(request.GetId(), user);
+                await _svc.UpdateUserPasswordByIdAsync(id, user);
 
                 return ResponseBuilder.BuildOk<object?>(null);
             }
@@ -153,6 +165,27 @@ namespace API.controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteUserById")]
+        public async Task<IActionResult> DeleteUserById(
+            [FromRoute]
+            [Required(ErrorMessage = "Id обязателен")]
+            [Range(1, int.MaxValue, ErrorMessage = "Id должен быть больше 0")]
+            int id)
+        {
+            if (RequestValidator.ValidateModel(ModelState) is var errors && errors.Count > 0)
+                return ResponseBuilder.BuildBadRequestErrors(errors);
+
+            try
+            {
+                await _svc.DeleteUserByIdAsync(id);
+
+                return ResponseBuilder.BuildOk<object?>(null);
+            }
+            catch (Exception ex)
+            {
+                var error = ExceptionHandler.Handle(ex);
+                return ResponseBuilder.BuildError(error);
+            }
+        }
 
         [HttpPut("count", Name = "GetUsersCount")]
         public async Task<IActionResult> GetCount()
