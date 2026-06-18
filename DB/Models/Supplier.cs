@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DB.Models;
+namespace DB.models;
 
 public partial class Supplier
 {

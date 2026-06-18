@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DB.Models;
+namespace DB.models;
 
 public partial class User
 {
@@ -12,6 +12,8 @@ public partial class User
     public string Password { get; set; } = null!;
 
     public int RoleId { get; set; }
+
+    public string FullName { get; set; } = null!;
 
     public virtual Role Role { get; set; } = null!;
 

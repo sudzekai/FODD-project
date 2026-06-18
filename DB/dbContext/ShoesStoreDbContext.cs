@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DB.Models;
+using DB.models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DB.dbContext;
@@ -188,6 +188,7 @@ public partial class ShoesStoreDbContext : DbContext
         {
             entity.HasIndex(e => e.Login, "IX_Users").IsUnique();
 
+            entity.Property(e => e.FullName).IsUnicode(false);
             entity.Property(e => e.Login)
                 .HasMaxLength(255)
                 .IsUnicode(false);
