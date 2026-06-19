@@ -25,9 +25,7 @@ namespace Services.products.services
 
         public async Task<List<TagDTO>> GetProductTagsByIdAsync(int productId)
         {
-            var productsQuery = _products.AsQueryable();
-
-            var entry = await productsQuery.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == productId)
+            var entry = await _products.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == productId)
                 ?? throw new NotFoundException("Товар с таким id не найден");
 
             var rawResult = entry.Tags.Select(t =>
@@ -39,13 +37,10 @@ namespace Services.products.services
 
         public async Task AddProductTagByIdAsync(int productId, int id)
         {
-            var tagsQuery = _tags.AsQueryable();
-            var productsQuery = _products.AsQueryable();
-
-            var productEntry = await productsQuery.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == productId)
+            var productEntry = await _products.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == productId)
                 ?? throw new NotFoundException("Товар с таким id не найден");
 
-            var tagEntry = await tagsQuery.FirstOrDefaultAsync(p => p.Id == productId)
+            var tagEntry = await _tags.FirstOrDefaultAsync(p => p.Id == productId)
                 ?? throw new NotFoundException("Тэг с таким id не найден");
 
             productEntry.Tags.Add(tagEntry);
@@ -62,13 +57,10 @@ namespace Services.products.services
 
         public async Task DeleteProductTagByIdAsync(int productId, int id)
         {
-            var tagsQuery = _tags.AsQueryable();
-            var productsQuery = _products.AsQueryable();
-
-            var productEntry = await productsQuery.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == productId)
+            var productEntry = await _products.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == productId)
                 ?? throw new NotFoundException("Товар с таким id не найден");
 
-            var tagEntry = await tagsQuery.FirstOrDefaultAsync(p => p.Id == productId)
+            var tagEntry = await _tags.FirstOrDefaultAsync(p => p.Id == productId)
                 ?? throw new NotFoundException("Тэг с таким id не найден");
 
             productEntry.Tags.Remove(tagEntry);
@@ -100,7 +92,7 @@ namespace Services.products.services
             var productEntry = await _products.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id)
                 ?? throw new NotFoundException("Товар с таким id не найден");
 
-            return productEntry.Tags.Count();
+            return productEntry.Tags.Count;
         }
     }
 }

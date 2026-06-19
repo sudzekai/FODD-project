@@ -50,9 +50,7 @@ namespace Services.suppliers.services
 
         public async Task<SupplierDTO> GetSupplierByIdAsync(int id)
         {
-            var query = _suppliers.AsQueryable();
-
-            var entry = await query.FirstOrDefaultAsync(s => s.Id == id)
+            var entry = await _suppliers.FirstOrDefaultAsync(s => s.Id == id)
                 ?? throw new NotFoundException("Поставщик с таким id не найден");
 
             var result = new SupplierDTO(
@@ -65,8 +63,6 @@ namespace Services.suppliers.services
 
         public async Task<int> CreateSupplierAsync(SupplierWriteDTO dto)
         {
-            var query = _suppliers.AsQueryable();
-
             if (await IsNameExists(dto.Name))
                 throw new ConflictException("Поставщик с таким названием уже существует");
 
@@ -91,9 +87,7 @@ namespace Services.suppliers.services
 
         public async Task UpdateSupplierByIdAsync(int id, SupplierWriteDTO dto)
         {
-            var query = _suppliers.AsQueryable();
-
-            var existing = await query.FirstOrDefaultAsync(s => s.Id == id)
+            var existing = await _suppliers.FirstOrDefaultAsync(s => s.Id == id)
                 ?? throw new NotFoundException("Поставщик с таким id не найден");
 
             if (existing.Name == dto.Name)
@@ -116,9 +110,7 @@ namespace Services.suppliers.services
 
         public async Task DeleteSupplierByIdAsync(int id)
         {
-            var query = _suppliers.AsQueryable();
-
-            var existing = await query.FirstOrDefaultAsync(s => s.Id == id)
+            var existing = await _suppliers.FirstOrDefaultAsync(s => s.Id == id)
                 ?? throw new NotFoundException("Поставщик с таким id не найден");
 
             _suppliers.Remove(existing);

@@ -50,17 +50,13 @@ namespace Services.roles.services
 
         public async Task<RoleDTO> GetRoleByIdAsync(int id)
         {
-            var query = _roles.AsQueryable();
-
-            var entry = await query.FirstOrDefaultAsync(u => u.Id == id)
+            var entry = await _roles.FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new NotFoundException("Роль с таким id не найдена");
 
-            var result = new RoleDTO(
+            return new(
                 entry.Id,
                 entry.Name
             );
-
-            return result;
         }
 
         public async Task<int> GetRolesCountAsync() => await _roles.CountAsync();

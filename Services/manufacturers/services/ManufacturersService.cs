@@ -50,9 +50,7 @@ namespace Services.manufacturers.services
 
         public async Task<ManufacturerDTO> GetManufacturerByIdAsync(int id)
         {
-            var query = _manufacturers.AsQueryable();
-
-            var entry = await query.FirstOrDefaultAsync(m => m.Id == id)
+            var entry = await _manufacturers.FirstOrDefaultAsync(m => m.Id == id)
                 ?? throw new NotFoundException("Производитель с таким id не найден");
 
             var result = new ManufacturerDTO(
@@ -65,8 +63,6 @@ namespace Services.manufacturers.services
 
         public async Task<int> CreateManufacturerAsync(ManufacturerWriteDTO dto)
         {
-            var query = _manufacturers.AsQueryable();
-
             if (await IsNameExists(dto.Name))
                 throw new ConflictException("Производитель с таким названием уже существует");
 
@@ -91,9 +87,7 @@ namespace Services.manufacturers.services
 
         public async Task UpdateManufacturerByIdAsync(int id, ManufacturerWriteDTO dto)
         {
-            var query = _manufacturers.AsQueryable();
-
-            var existing = await query.FirstOrDefaultAsync(m => m.Id == id)
+            var existing = await _manufacturers.FirstOrDefaultAsync(m => m.Id == id)
                 ?? throw new NotFoundException("Производитель с таким id не найден");
 
             if (existing.Name == dto.Name)
@@ -116,9 +110,7 @@ namespace Services.manufacturers.services
 
         public async Task DeleteManufacturerByIdAsync(int id)
         {
-            var query = _manufacturers.AsQueryable();
-
-            var existing = await query.FirstOrDefaultAsync(m => m.Id == id)
+            var existing = await _manufacturers.FirstOrDefaultAsync(m => m.Id == id)
                 ?? throw new NotFoundException("Производитель с таким id не найден");
 
             _manufacturers.Remove(existing);

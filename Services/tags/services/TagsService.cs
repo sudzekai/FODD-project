@@ -52,23 +52,17 @@ namespace Services.tags.services
 
         public async Task<TagDTO> GetTagByIdAsync(int id)
         {
-            var query = _tags.AsQueryable();
-
-            var entry = await query.FirstOrDefaultAsync(t => t.Id == id)
+            var entry = await _tags.FirstOrDefaultAsync(t => t.Id == id)
                 ?? throw new NotFoundException("Тэг с таким id не найден");
 
-            var result = new TagDTO(
+            return new(
                 entry.Id,
                 entry.Name
             );
-
-            return result;
         }
 
         public async Task<int> CreateTagAsync(TagWriteDTO dto)
         {
-            var query = _tags.AsQueryable();
-
             if (await IsNameExists(dto.Name))
                 throw new ConflictException("Тэг с таким названием уже существует");
 
@@ -93,9 +87,7 @@ namespace Services.tags.services
 
         public async Task UpdateTagByIdAsync(int id, TagWriteDTO dto)
         {
-            var query = _tags.AsQueryable();
-
-            var existing = await query.FirstOrDefaultAsync(t => t.Id == id)
+            var existing = await _tags.FirstOrDefaultAsync(t => t.Id == id)
                 ?? throw new NotFoundException("Тэг с таким id не найден");
 
             if (existing.Name == dto.Name)
@@ -118,9 +110,7 @@ namespace Services.tags.services
 
         public async Task DeleteTagByIdAsync(int id)
         {
-            var query = _tags.AsQueryable();
-
-            var existing = await query.FirstOrDefaultAsync(t => t.Id == id)
+            var existing = await _tags.FirstOrDefaultAsync(t => t.Id == id)
                 ?? throw new NotFoundException("Тэг с таким id не найден");
 
             _tags.Remove(existing);

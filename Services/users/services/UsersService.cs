@@ -51,9 +51,7 @@ namespace Services.users.services
 
         public async Task<UserDTO> GetUserByIdAsync(int id)
         {
-            var query = _users.AsQueryable();
-
-            var entry = await query.FirstOrDefaultAsync(u => u.Id == id)
+            var entry = await _users.FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new NotFoundException("Пользователь с таким id не найден");
 
             var result = new UserDTO(
@@ -68,8 +66,6 @@ namespace Services.users.services
 
         public async Task<int> CreateUserAsync(UserCreateDTO dto)
         {
-            var query = _users.AsQueryable();
-
             if (await IsLoginExistsAsync(dto.Login))
                 throw new ConflictException("Пользователь с таким логином уже существует");
 
@@ -97,9 +93,7 @@ namespace Services.users.services
 
         public async Task UpdateUserByIdAsync(int id, UserUpdateDTO dto)
         {
-            var query = _users.AsQueryable();
-
-            var existing = await query.FirstOrDefaultAsync(u => u.Id == id)
+            var existing = await _users.FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new NotFoundException("Пользователь с таким id не найден");
 
             if (existing.FullName == dto.FullName && existing.Login == dto.Login)
@@ -123,9 +117,7 @@ namespace Services.users.services
 
         public async Task UpdateUserPasswordByIdAsync(int id, UserPasswordUpdateDTO dto)
         {
-            var query = _users.AsQueryable();
-
-            var existing = await query.FirstOrDefaultAsync(u => u.Id == id)
+            var existing = await _users.FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new NotFoundException("Пользователь с таким id не найден");
 
             if (HashService.Compare(existing.Password, dto.Password))
@@ -147,9 +139,7 @@ namespace Services.users.services
 
         public async Task UpdateUserRoleByIdAsync(int id, UserRoleUpdateDTO dto)
         {
-            var query = _users.AsQueryable();
-
-            var existing = await query.FirstOrDefaultAsync(u => u.Id == id)
+            var existing = await _users.FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new NotFoundException("Пользователь с таким id не найден");
 
             if (existing.RoleId == dto.RoleId)
@@ -169,9 +159,7 @@ namespace Services.users.services
 
         public async Task DeleteUserByIdAsync(int id)
         {
-            var query = _users.AsQueryable();
-
-            var existing = await query.FirstOrDefaultAsync(u => u.Id == id)
+            var existing = await _users.FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new NotFoundException("Пользователь с таким id не найден");
 
             _users.Remove(existing);

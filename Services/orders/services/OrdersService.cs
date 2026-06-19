@@ -70,9 +70,7 @@ namespace Services.orders.services
 
         public async Task UpdateOrderStatusByOrderIdAsync(int id, OrderStatusUpdateDTO dto)
         {
-            var query = _orders.AsQueryable();
-
-            var entry = await query.FirstOrDefaultAsync(u => u.Id == id)
+            var entry = await _orders.FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new NotFoundException("Заказ с таким id не найден");
 
             if (entry.StatusId == dto.StatusId)
@@ -92,9 +90,7 @@ namespace Services.orders.services
 
         public async Task UpdateOrderDeliveryByOrderIdAsync(int id, OrderDeliveryUpdateDTO dto)
         {
-            var query = _orders.AsQueryable();
-
-            var entry = await query.FirstOrDefaultAsync(u => u.Id == id)
+            var entry = await _orders.FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new NotFoundException("Заказ с таким id не найден");
 
             if (entry.DeliveryDate == dto.DeliveryDate
@@ -116,9 +112,7 @@ namespace Services.orders.services
 
         public async Task DeleteOrderByIdAsync(int id)
         {
-            var query = _orders.AsQueryable();
-
-            var entry = await query.FirstOrDefaultAsync(u => u.Id == id)
+            var entry = await _orders.FirstOrDefaultAsync(u => u.Id == id)
                 ?? throw new NotFoundException("Заказ с таким id не найден");
 
             _orders.Remove(entry);

@@ -210,17 +210,10 @@ namespace Services.products.services
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-            return new string(Enumerable.Range(0, 6)
-                .Select(_ => chars[Random.Shared.Next(chars.Length)])
-                .ToArray());
+            return new([.. Enumerable.Range(0, 6).Select(_ => chars[Random.Shared.Next(chars.Length)])]);
         }
 
-        private async Task<bool> IsArticleExists(string article)
-        {
-            var query = _products.AsQueryable();
-
-            return await query.AnyAsync(p => p.Article == article);
-        }
+        private async Task<bool> IsArticleExists(string article) => await _products.AnyAsync(p => p.Article == article);
 
         public async Task<int> GetProductsCountAsync() => await _products.CountAsync();
     }
