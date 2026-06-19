@@ -1,13 +1,14 @@
 ﻿using DB.dbContext;
 using DB.models;
 using Microsoft.EntityFrameworkCore;
+using Services.orders.interfaces;
 using Services.unitOfWork;
 using Shared.dtos.orders;
 using Shared.types.exceptions;
 
 namespace Services.orders.services
 {
-    public class OrderProductsService
+    public class OrderProductsService : IOrderProductsService
     {
         private readonly DbSet<Order> _orders;
         private readonly DbSet<Product> _products;

@@ -68,7 +68,29 @@ namespace Services.orders.services
             return result;
         }
 
-        public async Task OrderDeliveryUpdateByIdAsync(int id, OrderDeliveryUpdateDTO dto)
+        public async Task UpdateOrderStatusByOrderIdAsync(int id, OrderStatusUpdateDTO dto)
+        {
+            var query = _orders.AsQueryable();
+
+            var entry = await query.FirstOrDefaultAsync(u => u.Id == id)
+                ?? throw new NotFoundException("Заказ с таким id не найден");
+
+            if (entry.StatusId == dto.StatusId)
+                throw new InvalidOperationException("Исходные данные совпадают с переданными");
+
+            entry.StatusId = dto.StatusId;
+
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new InternalServerException("Возникла ошибка при обновлении статуса заказа");
+            }
+        }
+
+        public async Task UpdateOrderDeliveryByOrderIdAsync(int id, OrderDeliveryUpdateDTO dto)
         {
             var query = _orders.AsQueryable();
 
