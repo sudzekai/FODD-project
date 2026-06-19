@@ -134,14 +134,14 @@ namespace API.controllers
         public async Task<IActionResult> PutUserRoleById(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Данные пользователя (roleId) обязательны")]
-            [FromBody] UserPasswordUpdateDTO user)
+            [FromBody] UserRoleUpdateDTO user)
         {
             if (RequestValidator.ValidateModel(ModelState) is var errors && errors.Count > 0)
                 return ResponseBuilder.BuildBadRequestErrors(errors);
 
             try
             {
-                await _svc.UpdateUserPasswordByIdAsync(req.Id, user);
+                await _svc.UpdateUserRoleByIdAsync(req.Id, user);
 
                 return ResponseBuilder.BuildOk<object?>(null);
             }

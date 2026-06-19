@@ -74,7 +74,7 @@ namespace Services.orders.services
                 ?? throw new NotFoundException("Заказ с таким id не найден");
 
             if (entry.StatusId == dto.StatusId)
-                throw new InvalidOperationException("Исходные данные совпадают с переданными");
+                throw new ConflictException("Исходные данные совпадают с переданными");
 
             entry.StatusId = dto.StatusId;
 
@@ -95,7 +95,7 @@ namespace Services.orders.services
 
             if (entry.DeliveryDate == dto.DeliveryDate
                 || entry.ReceiptCode == dto.ReceiptCode)
-                throw new InvalidOperationException("Исходные данные совпадают с переданными");
+                throw new ConflictException("Исходные данные совпадают с переданными");
 
             entry.DeliveryDate = dto.DeliveryDate;
             entry.ReceiptCode = dto.ReceiptCode;

@@ -143,7 +143,7 @@ namespace Services.users.services
                 ?? throw new NotFoundException("Пользователь с таким id не найден");
 
             if (existing.RoleId == dto.RoleId)
-                throw new InvalidOperationException("Исходные данные совпадают с переданными");
+                throw new ConflictException("Исходные данные совпадают с переданными");
 
             existing.RoleId = dto.RoleId;
 
