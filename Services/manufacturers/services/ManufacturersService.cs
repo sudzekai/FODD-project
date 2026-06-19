@@ -133,11 +133,7 @@ namespace Services.manufacturers.services
             }
         }
 
-        public async Task<int> GetManufacturersCountAsync()
-        {
-            var query = _manufacturers.AsQueryable();
-            return await query.CountAsync();
-        }
+        public async Task<int> GetManufacturersCountAsync() => await _manufacturers.CountAsync();
 
         private async Task<bool> IsNameExists(string name, int? excludeManufacturerId = null)
         {

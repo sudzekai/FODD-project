@@ -135,12 +135,6 @@ namespace Services.tags.services
             }
         }
 
-        public async Task<int> GetTagsCountAsync()
-        {
-            var query = _tags.AsQueryable();
-            return await query.CountAsync();
-        }
-
         private async Task<bool> IsNameExists(string name, int? excludeTagId = null)
         {
             var query = _tags.AsQueryable();
@@ -150,5 +144,7 @@ namespace Services.tags.services
 
             return await query.AnyAsync(t => t.Name == name);
         }
+
+        public async Task<int> GetTagsCountAsync() => await _tags.CountAsync();
     }
 }

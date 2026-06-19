@@ -9,6 +9,7 @@ namespace Services.products.interfaces
         Task DeleteProductByIdAsync(int id);
         Task<ProductDTO> GetProductByIdAsync(int id);
         Task<List<ProductSimpleDTO>> GetProductsAsync(GetListRequest req);
+        Task<int> GetProductsCountAsync();
         Task UpdateProductByIdAsync(int id, ProductUpdateDTO dto);
         Task UpdateProductPricingByIdAsync(int id, ProductPricingUpdateDTO dto);
         Task UpdateProductRelationsByIdAsync(int id, ProductRelationsUpdateDTO dto);

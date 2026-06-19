@@ -8,6 +8,7 @@ namespace Services.statuses.interfaces
         Task DeleteStatusByIdAsync(int id);
         Task<StatusDTO> GetStatusByIdAsync(int id);
         Task<List<StatusDTO>> GetStatusesAsync();
+        Task<int> GetStatusesCountAsync();
         Task UpdateStatusByIdAsync(int id, StatusWriteDTO dto);
     }
 }

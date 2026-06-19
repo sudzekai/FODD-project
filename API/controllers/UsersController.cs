@@ -1,4 +1,5 @@
 ﻿using API.helpers;
+using API.requests;
 using Microsoft.AspNetCore.Mvc;
 using Services.users.interfaces;
 using Shared.dtos.users;
@@ -45,18 +46,14 @@ namespace API.controllers
         }
 
         [HttpGet(template: "{id}", Name = "GetUserById")]
-        public async Task<IActionResult> GetUserById(
-            [FromRoute]
-            [Required(ErrorMessage = "Id обязателен")]
-            [Range(1, int.MaxValue, ErrorMessage = "Id должен быть больше 0")]
-            int id)
+        public async Task<IActionResult> GetUserById([FromRoute] ByIdRequest req)
         {
             if (RequestValidator.ValidateModel(ModelState) is var errors && errors.Count > 0)
                 return ResponseBuilder.BuildBadRequestErrors(errors);
 
             try
             {
-                var data = await _svc.GetUserByIdAsync(id);
+                var data = await _svc.GetUserByIdAsync(req.Id);
 
                 return ResponseBuilder.BuildOk(data);
             }
@@ -91,10 +88,7 @@ namespace API.controllers
 
         [HttpPut("{id}", Name = "PutUserById")]
         public async Task<IActionResult> PutUserById(
-            [FromRoute]
-            [Required(ErrorMessage = "Id обязателен")]
-            [Range(1, int.MaxValue, ErrorMessage = "Id должен быть больше 0")]
-            int id,
+            [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Данные пользователя (login, password, fullName) обязательны")]
             [FromBody] UserUpdateDTO user)
         {
@@ -103,7 +97,7 @@ namespace API.controllers
 
             try
             {
-                await _svc.UpdateUserByIdAsync(id, user);
+                await _svc.UpdateUserByIdAsync(req.Id, user);
 
                 return ResponseBuilder.BuildOk<object?>(null);
             }
@@ -116,10 +110,7 @@ namespace API.controllers
 
         [HttpPut("{id}/password", Name = "PutUserPasswordById")]
         public async Task<IActionResult> PutUserPasswordById(
-            [FromRoute]
-            [Required(ErrorMessage = "Id обязателен")]
-            [Range(1, int.MaxValue, ErrorMessage = "Id должен быть больше 0")]
-            int id,
+            [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Данные пользователя (password) обязательны")]
             [FromBody] UserPasswordUpdateDTO user)
         {
@@ -128,7 +119,7 @@ namespace API.controllers
 
             try
             {
-                await _svc.UpdateUserPasswordByIdAsync(id, user);
+                await _svc.UpdateUserPasswordByIdAsync(req.Id, user);
 
                 return ResponseBuilder.BuildOk<object?>(null);
             }
@@ -141,10 +132,7 @@ namespace API.controllers
 
         [HttpPut("{id}/role", Name = "PutUserRoleById")]
         public async Task<IActionResult> PutUserRoleById(
-            [FromRoute]
-            [Required(ErrorMessage = "Id обязателен")]
-            [Range(1, int.MaxValue, ErrorMessage = "Id должен быть больше 0")]
-            int id,
+            [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Данные пользователя (roleId) обязательны")]
             [FromBody] UserPasswordUpdateDTO user)
         {
@@ -153,7 +141,7 @@ namespace API.controllers
 
             try
             {
-                await _svc.UpdateUserPasswordByIdAsync(id, user);
+                await _svc.UpdateUserPasswordByIdAsync(req.Id, user);
 
                 return ResponseBuilder.BuildOk<object?>(null);
             }
@@ -165,18 +153,14 @@ namespace API.controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteUserById")]
-        public async Task<IActionResult> DeleteUserById(
-            [FromRoute]
-            [Required(ErrorMessage = "Id обязателен")]
-            [Range(1, int.MaxValue, ErrorMessage = "Id должен быть больше 0")]
-            int id)
+        public async Task<IActionResult> DeleteUserById([FromRoute] ByIdRequest req)
         {
             if (RequestValidator.ValidateModel(ModelState) is var errors && errors.Count > 0)
                 return ResponseBuilder.BuildBadRequestErrors(errors);
 
             try
             {
-                await _svc.DeleteUserByIdAsync(id);
+                await _svc.DeleteUserByIdAsync(req.Id);
 
                 return ResponseBuilder.BuildOk<object?>(null);
             }

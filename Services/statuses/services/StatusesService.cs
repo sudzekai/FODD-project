@@ -97,5 +97,7 @@ namespace Services.statuses.services
 
             return await query.AnyAsync(s => s.Name == name);
         }
+
+        public async Task<int> GetStatusesCountAsync() => await _statuses.CountAsync();
     }
 }

@@ -186,11 +186,7 @@ namespace Services.users.services
             }
         }
 
-        public async Task<int> GetUsersCountAsync()
-        {
-            var query = _users.AsQueryable();
-            return await query.CountAsync();
-        }
+        public async Task<int> GetUsersCountAsync() => await _users.CountAsync();
 
         private async Task<bool> IsLoginExistsAsync(string login, int? excludeUserId = null)
         {

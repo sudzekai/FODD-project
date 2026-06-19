@@ -64,5 +64,15 @@ namespace Services.users.services
 
             return order.Id;
         }
+
+        public async Task<int> GetUserOrdersCountByUserIdAsync(int id)
+        {
+            var user = await _users
+                .Include(u => u.Orders)
+                .FirstOrDefaultAsync(u => u.Id == id)
+                ?? throw new NotFoundException("Пользователь с таким id не найден");
+
+            return user.Orders.Count();
+        }
     }
 }

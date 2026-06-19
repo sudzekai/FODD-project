@@ -10,5 +10,6 @@ namespace Services.products.interfaces
         Task DeleteBatchProductTagsByIdAsync(int productId, ProductTagsUpdateDTO dto);
         Task DeleteProductTagByIdAsync(int productId, int id);
         Task<List<TagDTO>> GetProductTagsByIdAsync(int productId);
+        Task<int> GetProductTagsCountByProductIdAsync(int id);
     }
 }

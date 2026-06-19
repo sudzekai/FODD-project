@@ -62,5 +62,8 @@ namespace Services.roles.services
 
             return result;
         }
+
+        public async Task<int> GetRolesCountAsync() => await _roles.CountAsync();
+
     }
 }

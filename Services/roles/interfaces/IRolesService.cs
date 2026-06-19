@@ -7,5 +7,6 @@ namespace Services.roles.interfaces
     {
         Task<RoleDTO> GetRoleByIdAsync(int id);
         Task<List<RoleDTO>> GetRolesAsync(GetListRequest req);
+        Task<int> GetRolesCountAsync();
     }
 }

@@ -94,5 +94,13 @@ namespace Services.products.services
             foreach (var tagId in dto.TagIds)
                 await DeleteProductTagByIdAsync(productId, tagId);
         }
+
+        public async Task<int> GetProductTagsCountByProductIdAsync(int id)
+        {
+            var productEntry = await _products.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id)
+                ?? throw new NotFoundException("Товар с таким id не найден");
+
+            return productEntry.Tags.Count();
+        }
     }
 }

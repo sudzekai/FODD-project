@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Shared.dtos.users
 {
+
     public class UserCreateDTO
     {
         public UserCreateDTO() { }

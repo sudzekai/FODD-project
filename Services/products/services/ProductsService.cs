@@ -206,7 +206,6 @@ namespace Services.products.services
             }
         }
 
-
         private static string GenerateArticle()
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -222,5 +221,7 @@ namespace Services.products.services
 
             return await query.AnyAsync(p => p.Article == article);
         }
+
+        public async Task<int> GetProductsCountAsync() => await _products.CountAsync();
     }
 }

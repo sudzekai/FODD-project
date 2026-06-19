@@ -6,5 +6,6 @@ namespace Services.users.interfaces
     {
         Task<int> CreateOrderByUserId(int id);
         Task<List<OrderSimpleDTO>> GetUserOrdersByUserIdAsync(int id);
+        Task<int> GetUserOrdersCountByUserIdAsync(int id);
     }
 }

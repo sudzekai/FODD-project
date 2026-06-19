@@ -132,5 +132,7 @@ namespace Services.orders.services
                 throw new InternalServerException("Возникла ошибка при удалении заказа");
             }
         }
+
+        public async Task<int> GetOrdersCountAsync() => await _orders.CountAsync();
     }
 }

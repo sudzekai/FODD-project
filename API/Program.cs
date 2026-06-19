@@ -2,6 +2,8 @@
 using DB.dbContext;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Services.manufacturers.interfaces;
+using Services.manufacturers.services;
 using Services.orders.interfaces;
 using Services.orders.services;
 using Services.products.interfaces;
@@ -60,6 +62,7 @@ namespace API
         {
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            AddManufacturersServices(builder);
             AddOrdersServices(builder);
             AddProductsServices(builder);
             AddRolesServices(builder);
@@ -69,6 +72,10 @@ namespace API
             AddUsersServices(builder);
         }
 
+        private static void AddManufacturersServices(WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IManufacturersService, ManufacturersService>();
+        }
         private static void AddUsersServices(WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<IUsersService, UsersService>();

@@ -89,6 +89,10 @@ namespace Services.orders.services
 
         public async Task RemoveOrderProductByOrderIdAsync(int orderId, OrderProductUpdateDTO dto)
         {
+            var order = await _orders
+                .FirstOrDefaultAsync(o => o.Id == orderId)
+                ?? throw new NotFoundException("Заказ с таким id не найден");
+
             var existing = await _orderProducts
                 .FirstOrDefaultAsync(op => op.OrderId == orderId && op.ProductId == dto.ProductId)
                 ?? throw new NotFoundException("Такого товара в заказе нет");
@@ -110,6 +114,10 @@ namespace Services.orders.services
 
         public async Task DeleteOrderProductByOrderIdAsync(int orderId, OrderProductUpdateDTO dto)
         {
+            var order = await _orders
+                .FirstOrDefaultAsync(o => o.Id == orderId)
+                ?? throw new NotFoundException("Заказ с таким id не найден");
+
             var existing = await _orderProducts
                 .FirstOrDefaultAsync(op => op.OrderId == orderId && op.ProductId == dto.ProductId)
                 ?? throw new NotFoundException("Такого товара в заказе нет");
@@ -124,6 +132,28 @@ namespace Services.orders.services
             {
                 throw new InternalServerException("Возникла ошибка при уменьшении количества товара в заказе");
             }
+        }
+
+        public async Task<int> GetOrderProductsSumCountByOrderIdAsync(int id)
+        {
+            _ = await _orders
+                .FirstOrDefaultAsync(o => o.Id == id)
+                ?? throw new NotFoundException("Заказ с таким id не найден");
+
+            var orderProducts = _orderProducts.Where(op => op.OrderId == id);
+
+            return (await orderProducts.Select(op => op.Quantity).ToListAsync()).Sum();
+        }
+
+        public async Task<int> GetOrderProductsCountByOrderIdAsync(int id)
+        {
+            _ = await _orders
+                .FirstOrDefaultAsync(o => o.Id == id)
+                ?? throw new NotFoundException("Заказ с таким id не найден");
+
+            var orderProducts = _orderProducts.Where(op => op.OrderId == id);
+
+            return await orderProducts.CountAsync();
         }
     }
 }

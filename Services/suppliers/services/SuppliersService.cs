@@ -133,11 +133,7 @@ namespace Services.suppliers.services
             }
         }
 
-        public async Task<int> GetSuppliersCountAsync()
-        {
-            var query = _suppliers.AsQueryable();
-            return await query.CountAsync();
-        }
+        public async Task<int> GetSuppliersCountAsync() => await _suppliers.CountAsync();
 
         private async Task<bool> IsNameExists(string name, int? excludeSupplierId = null)
         {
