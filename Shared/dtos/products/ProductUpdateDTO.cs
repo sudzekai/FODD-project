@@ -1,0 +1,49 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Shared.dtos.products
+{
+    public class ProductUpdateDTO
+    {
+        public ProductUpdateDTO()
+        {
+
+        }
+
+        public ProductUpdateDTO(string name, string unit, int quantity, short? size, string? color, string description, int categoryId)
+        {
+            Name = name;
+            Unit = unit;
+            Quantity = quantity;
+            Size = size;
+            Color = color;
+            Description = description;
+            CategoryId = categoryId;
+        }
+
+        [Required(ErrorMessage = "Name обязателен")]
+        [StringLength(50, MinimumLength = 5, ErrorMessage = "Name должен быть длиной от 5 до 50 символов")]
+        public string Name { get; set; } = null!;
+
+        [Required(ErrorMessage = "Unit обязателен")]
+        [StringLength(5, MinimumLength = 1, ErrorMessage = "Unit должен быть длиной от 1 до 5 символов")]
+        public string Unit { get; set; } = null!;
+
+        [Required(ErrorMessage = "Quantity обязателен")]
+        [Range(0, 100, ErrorMessage = "Quantity должен быть от 0 до 100")]
+        public int Quantity { get; set; }
+
+        [Range(1, 50, ErrorMessage = "Size должен быть от 1 до 50")]
+        public short? Size { get; set; }
+
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Color должен быть длиной от 3 до 50 символов")]
+        public string? Color { get; set; }
+
+        [Required(ErrorMessage = "Description обязателен")]
+        [StringLength(500, MinimumLength = 5, ErrorMessage = "Description должен быть длиной от 5 до 500 символов")]
+        public string Description { get; set; } = null!;
+
+        [Required(ErrorMessage = "CategoryId обязателен")]
+        [Range(0, int.MaxValue, ErrorMessage = "CategoryId должен быть больше 0")]
+        public int CategoryId { get; set; }
+    }
+}

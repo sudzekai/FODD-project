@@ -1,4 +1,4 @@
-﻿namespace Services.interfaces
+﻿namespace Services.unitOfWork
 {
     public interface IUnitOfWork
     {

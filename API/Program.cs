@@ -2,8 +2,9 @@
 using DB.dbContext;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Services.interfaces;
-using Services.services;
+using Services.unitOfWork;
+using Services.users.interfaces;
+using Services.users.services;
 
 namespace API
 {

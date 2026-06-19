@@ -1,7 +1,6 @@
 ﻿using DB.dbContext;
-using Services.interfaces;
 
-namespace Services.services
+namespace Services.unitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {

@@ -15,7 +15,7 @@ public partial class User
 
     public string FullName { get; set; } = null!;
 
-    public virtual Role Role { get; set; } = null!;
-
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
+    public virtual Role Role { get; set; } = null!;
 }

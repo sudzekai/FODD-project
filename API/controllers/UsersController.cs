@@ -1,6 +1,6 @@
 ﻿using API.helpers;
 using Microsoft.AspNetCore.Mvc;
-using Services.interfaces;
+using Services.users.interfaces;
 using Shared.dtos.users;
 using Shared.requests;
 using System.ComponentModel.DataAnnotations;

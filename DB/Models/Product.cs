@@ -35,11 +35,11 @@ public partial class Product
 
     public virtual Manufacturer? Manufacturer { get; set; }
 
+    public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
+
     public virtual ICollection<Photo> Photos { get; set; } = new List<Photo>();
 
     public virtual Supplier? Supplier { get; set; }
-
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
 }

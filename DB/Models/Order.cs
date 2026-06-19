@@ -15,9 +15,11 @@ public partial class Order
 
     public int StatusId { get; set; }
 
+    public int? UserId { get; set; }
+
+    public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
+
     public virtual Status Status { get; set; } = null!;
 
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
-
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual User? User { get; set; }
 }

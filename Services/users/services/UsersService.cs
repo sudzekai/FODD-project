@@ -1,13 +1,14 @@
 ﻿using DB.dbContext;
 using DB.models;
 using Microsoft.EntityFrameworkCore;
-using Services.interfaces;
+using Services.unitOfWork;
+using Services.users.interfaces;
 using Services.utilities;
 using Shared.dtos.users;
 using Shared.requests;
 using Shared.types.exceptions;
 
-namespace Services.services
+namespace Services.users.services
 {
     public class UsersService : IUsersService
     {

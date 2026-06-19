@@ -1,7 +1,7 @@
 ﻿using Shared.dtos.users;
 using Shared.requests;
 
-namespace Services.interfaces
+namespace Services.users.interfaces
 {
     public interface IUsersService
     {

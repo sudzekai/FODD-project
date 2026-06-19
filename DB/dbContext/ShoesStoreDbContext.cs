@@ -22,6 +22,8 @@ public partial class ShoesStoreDbContext : DbContext
 
     public virtual DbSet<Order> Orders { get; set; }
 
+    public virtual DbSet<OrderProduct> OrderProducts { get; set; }
+
     public virtual DbSet<Photo> Photos { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
@@ -38,7 +40,7 @@ public partial class ShoesStoreDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=ShoesStoreDB;Integrated Security=True;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=ShoesStoreDB;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Command Timeout=0");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -62,6 +64,8 @@ public partial class ShoesStoreDbContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
+            entity.HasIndex(e => e.StatusId, "IX_Orders_StatusId");
+
             entity.Property(e => e.CreationDateTime).HasColumnType("datetime");
             entity.Property(e => e.DeliveryDate).HasColumnType("datetime");
 
@@ -70,25 +74,32 @@ public partial class ShoesStoreDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_OrderStatus");
 
-            entity.HasMany(d => d.Products).WithMany(p => p.Orders)
-                .UsingEntity<Dictionary<string, object>>(
-                    "OrderProduct",
-                    r => r.HasOne<Product>().WithMany()
-                        .HasForeignKey("ProductId")
-                        .HasConstraintName("FK_OrderProducts_Products"),
-                    l => l.HasOne<Order>().WithMany()
-                        .HasForeignKey("OrderId")
-                        .HasConstraintName("FK_OrderProducts_Orders"),
-                    j =>
-                    {
-                        j.HasKey("OrderId", "ProductId");
-                        j.ToTable("OrderProducts");
-                    });
+            entity.HasOne(d => d.User).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Orders_Users");
+        });
+
+        modelBuilder.Entity<OrderProduct>(entity =>
+        {
+            entity.HasKey(e => new { e.OrderId, e.ProductId });
+
+            entity.HasIndex(e => e.ProductId, "IX_OrderProducts_ProductId");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.OrderProducts)
+                .HasForeignKey(d => d.OrderId)
+                .HasConstraintName("FK_OrderProducts_Orders");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.OrderProducts)
+                .HasForeignKey(d => d.ProductId)
+                .HasConstraintName("FK_OrderProducts_Products");
         });
 
         modelBuilder.Entity<Photo>(entity =>
         {
             entity.HasIndex(e => e.FileName, "IX_Photos").IsUnique();
+
+            entity.HasIndex(e => e.ProductId, "IX_Photos_ProductId");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.FileName)
@@ -103,6 +114,12 @@ public partial class ShoesStoreDbContext : DbContext
         modelBuilder.Entity<Product>(entity =>
         {
             entity.HasIndex(e => e.Article, "IX_Products").IsUnique();
+
+            entity.HasIndex(e => e.CategoryId, "IX_Products_CategoryId");
+
+            entity.HasIndex(e => e.ManufacturerId, "IX_Products_ManufacturerId");
+
+            entity.HasIndex(e => e.SupplierId, "IX_Products_SupplierId");
 
             entity.Property(e => e.Article)
                 .HasMaxLength(6)
@@ -147,6 +164,7 @@ public partial class ShoesStoreDbContext : DbContext
                     {
                         j.HasKey("ProductId", "TagId");
                         j.ToTable("ProductTags");
+                        j.HasIndex(new[] { "TagId" }, "IX_ProductTags_TagId");
                     });
         });
 
@@ -188,6 +206,8 @@ public partial class ShoesStoreDbContext : DbContext
         {
             entity.HasIndex(e => e.Login, "IX_Users").IsUnique();
 
+            entity.HasIndex(e => e.RoleId, "IX_Users_RoleId");
+
             entity.Property(e => e.FullName).IsUnicode(false);
             entity.Property(e => e.Login)
                 .HasMaxLength(255)
@@ -198,21 +218,6 @@ public partial class ShoesStoreDbContext : DbContext
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserRole");
-
-            entity.HasMany(d => d.Orders).WithMany(p => p.Users)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UserOrder",
-                    r => r.HasOne<Order>().WithMany()
-                        .HasForeignKey("OrderId")
-                        .HasConstraintName("FK_UserOrders_Orders"),
-                    l => l.HasOne<User>().WithMany()
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK_UserOrders_Users"),
-                    j =>
-                    {
-                        j.HasKey("UserId", "OrderId");
-                        j.ToTable("UserOrders");
-                    });
         });
 
         OnModelCreatingPartial(modelBuilder);
