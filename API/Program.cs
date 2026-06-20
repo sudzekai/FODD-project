@@ -76,11 +76,6 @@ namespace API
         {
             builder.Services.AddScoped<IManufacturersService, ManufacturersService>();
         }
-        private static void AddUsersServices(WebApplicationBuilder builder)
-        {
-            builder.Services.AddScoped<IUsersService, UsersService>();
-            builder.Services.AddScoped<IUserOrdersService, UserOrdersService>();
-        }
 
         private static void AddProductsServices(WebApplicationBuilder builder)
         {
@@ -112,6 +107,12 @@ namespace API
         private static void AddTagsServices(WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<ITagsService, TagsService>();
+        }
+
+        private static void AddUsersServices(WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IUsersService, UsersService>();
+            builder.Services.AddScoped<IUserOrdersService, UserOrdersService>();
         }
 
         private static void AddControllesWithOptions(WebApplicationBuilder builder)

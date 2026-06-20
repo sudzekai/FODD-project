@@ -1,4 +1,6 @@
-﻿namespace Shared.dtos.products
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Shared.dtos.products
 {
     public class ProductTagsUpdateDTO
     {
@@ -11,6 +13,7 @@
             TagIds = tagIds;
         }
 
+        [Required(ErrorMessage = "Список id тэгов обязателен")]
         public List<int> TagIds { get; set; }
     }
 }

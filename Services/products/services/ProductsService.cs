@@ -70,7 +70,7 @@ namespace Services.products.services
             );
         }
 
-        public async Task<int> CreateProductByIdAsync(int id, ProductCreateDTO dto)
+        public async Task<int> CreateProductAsync(ProductCreateDTO dto)
         {
             string article;
 

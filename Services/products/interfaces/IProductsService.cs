@@ -5,7 +5,7 @@ namespace Services.products.interfaces
 {
     public interface IProductsService
     {
-        Task<int> CreateProductByIdAsync(int id, ProductCreateDTO dto);
+        Task<int> CreateProductAsync(ProductCreateDTO dto);
         Task DeleteProductByIdAsync(int id);
         Task<ProductDTO> GetProductByIdAsync(int id);
         Task<List<ProductSimpleDTO>> GetProductsAsync(GetListRequest req);

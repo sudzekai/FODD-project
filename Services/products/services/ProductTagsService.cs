@@ -23,7 +23,7 @@ namespace Services.products.services
             _uow = uow;
         }
 
-        public async Task<List<TagDTO>> GetProductTagsByIdAsync(int productId)
+        public async Task<List<TagDTO>> GetProductTagsByProductIdAsync(int productId)
         {
             var entry = await _products.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == productId)
                 ?? throw new NotFoundException("Товар с таким id не найден");
@@ -75,13 +75,13 @@ namespace Services.products.services
             }
         }
 
-        public async Task AddBatchProductTagsByIdAsync(int productId, ProductTagsUpdateDTO dto)
+        public async Task AddBatchProductTagsById(int productId, ProductTagsUpdateDTO dto)
         {
             foreach (var tagId in dto.TagIds)
                 await AddProductTagByIdAsync(productId, tagId);
         }
 
-        public async Task DeleteBatchProductTagsByIdAsync(int productId, ProductTagsUpdateDTO dto)
+        public async Task DeleteBatchProductTagsById(int productId, ProductTagsUpdateDTO dto)
         {
             foreach (var tagId in dto.TagIds)
                 await DeleteProductTagByIdAsync(productId, tagId);
