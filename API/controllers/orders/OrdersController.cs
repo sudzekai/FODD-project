@@ -3,7 +3,6 @@ using API.requests;
 using Microsoft.AspNetCore.Mvc;
 using Services.orders.interfaces;
 using Shared.dtos.orders;
-using Shared.dtos.products;
 using Shared.requests;
 using System.ComponentModel.DataAnnotations;
 
@@ -21,7 +20,7 @@ namespace API.controllers.orders
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts([FromRoute] GetListRequest req)
+        public async Task<IActionResult> GetOrders([FromQuery] GetListRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 var data = await _svc.GetOrdersAsync(req);
@@ -29,7 +28,7 @@ namespace API.controllers.orders
             }, ModelState);
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductById([FromRoute] ByIdRequest req)
+        public async Task<IActionResult> GetOrderById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 var data = await _svc.GetOrderByIdAsync(req.Id);
@@ -37,7 +36,7 @@ namespace API.controllers.orders
             }, ModelState);
 
         [HttpPut("{id}/status")]
-        public async Task<IActionResult> PutProduct(
+        public async Task<IActionResult> PutOrder(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Информация о статусе обязательна")]
             [FromBody] OrderStatusUpdateDTO dto)
@@ -48,7 +47,7 @@ namespace API.controllers.orders
             }, ModelState);
 
         [HttpPut("{id}/delivery")]
-        public async Task<IActionResult> PutProductPricing(
+        public async Task<IActionResult> PutOrderPricing(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Информация о доставке товара обязательна")]
             [FromBody] OrderDeliveryUpdateDTO dto)
@@ -59,7 +58,7 @@ namespace API.controllers.orders
             }, ModelState);
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> PutProductRelations([FromRoute] ByIdRequest req)
+        public async Task<IActionResult> PutOrderRelations([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 await _svc.DeleteOrderByIdAsync(req.Id);

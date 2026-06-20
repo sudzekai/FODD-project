@@ -58,7 +58,7 @@ namespace API.controllers.statuses
             }, ModelState);
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> PutStatusRelations([FromRoute] ByIdRequest req)
+        public async Task<IActionResult> DeleteStatusById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 await _svc.DeleteStatusByIdAsync(req.Id);

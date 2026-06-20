@@ -20,7 +20,7 @@ namespace API.controllers.products
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts([FromRoute] GetListRequest req)
+        public async Task<IActionResult> GetProducts([FromQuery] GetListRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 var data = await _svc.GetProductsAsync(req);
@@ -80,7 +80,7 @@ namespace API.controllers.products
             }, ModelState);
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> PutProductRelations([FromRoute] ByIdRequest req)
+        public async Task<IActionResult> DeleteProductById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 await _svc.DeleteProductByIdAsync(req.Id);

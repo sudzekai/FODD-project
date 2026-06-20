@@ -20,7 +20,7 @@ namespace API.controllers.suppliers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSuppliers([FromRoute] GetListRequest req)
+        public async Task<IActionResult> GetSuppliers([FromQuery] GetListRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 var data = await _svc.GetSuppliersAsync(req);
@@ -58,7 +58,7 @@ namespace API.controllers.suppliers
             }, ModelState);
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> PutSupplierRelations([FromRoute] ByIdRequest req)
+        public async Task<IActionResult> DeleteSupplierById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 await _svc.DeleteSupplierByIdAsync(req.Id);

@@ -20,7 +20,7 @@ namespace API.controllers.tags
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTags([FromRoute] GetListRequest req)
+        public async Task<IActionResult> GetTags([FromQuery] GetListRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 var data = await _svc.GetTagsAsync(req);
@@ -58,7 +58,7 @@ namespace API.controllers.tags
             }, ModelState);
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> PutTagRelations([FromRoute] ByIdRequest req)
+        public async Task<IActionResult> DeleteTagById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 await _svc.DeleteTagByIdAsync(req.Id);

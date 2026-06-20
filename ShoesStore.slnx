@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="API/API.csproj" />
+  <Project Path="Clients/Clients.csproj" Id="b6711dba-e792-4b55-80af-7e94f6d68ebb" />
   <Project Path="DB/DB.csproj" />
   <Project Path="Services/Services.csproj" />
   <Project Path="Shared/Shared.csproj" />

@@ -1,0 +1,17 @@
+﻿.sidebar {
+    width: 53px;
+    transition: width 0.15s ease-in-out;
+    overflow: hidden;
+}
+
+    .sidebar:hover {
+        width: 200px;
+    }
+
+    .sidebar:hover .sidebar-item {
+        display: unset;
+    }
+
+.sidebar .sidebar-item {
+    display: none;
+}

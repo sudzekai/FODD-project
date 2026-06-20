@@ -18,7 +18,7 @@ namespace API.controllers.roles
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRoles([FromRoute] GetListRequest req)
+        public async Task<IActionResult> GetRoles([FromQuery] GetListRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 var data = await _svc.GetRolesAsync(req);

@@ -20,7 +20,7 @@ namespace API.controllers.Manufacturers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetManufacturers([FromRoute] GetListRequest req)
+        public async Task<IActionResult> GetManufacturers([FromQuery] GetListRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 var data = await _svc.GetManufacturersAsync(req);
@@ -58,7 +58,7 @@ namespace API.controllers.Manufacturers
             }, ModelState);
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> PutManufacturerRelations([FromRoute] ByIdRequest req)
+        public async Task<IActionResult> DeleteManufacturerById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 await _svc.DeleteManufacturerByIdAsync(req.Id);
