@@ -1,10 +1,27 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Главная";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h2 class="fw-semibold">Главная</h2>
+
+
+<form method="get" class="d-flex gap-2">
+    <input type="text"
+            asp-for="Search"
+            class="form-control rounded-4"
+            placeholder="Поиск..." />
+
+    <button class="btn btn-sm btn-primary rounded-4 btn-1x1">
+        <i class="bi bi-search"></i>
+    </button>
+</form>
+
+<div class="d-flex flex-column gap-1">
+    @foreach (var user in Model.Users)
+    {
+        <div>@user.Login</div>
+        <br />
+    }
 </div>

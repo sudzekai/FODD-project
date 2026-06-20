@@ -30,6 +30,8 @@ namespace Services.products.services
                     p.Name.Contains(req.SearchTerm)
                     || p.Article.Contains(req.SearchTerm)
                     || p.Tags.Any(t => t.Name.Contains(req.SearchTerm))
+                    || p.Color.Contains(req.SearchTerm)
+                    || p.Size.ToString().Contains(req.SearchTerm)
                 );
             }
 

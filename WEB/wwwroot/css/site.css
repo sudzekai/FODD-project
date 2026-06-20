@@ -35,3 +35,9 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+.btn-1x1 {
+    padding: 0 !important;
+    aspect-ratio: 1/1;
+    width: 38px;
+}
