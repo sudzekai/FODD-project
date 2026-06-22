@@ -50,9 +50,38 @@
 
 
     <div class="d-flex flex-grow-1">
-        <div class="container bg-white shadow my-1 py-2">
+        <div class="container my-2 ">
             @RenderBody()
-        </div>
+            @if (TempData["Error"] != null)
+            {
+                <div id="errorOverlay"
+                     class="position-fixed top-0 start-0 w-100 h-100"
+                     style="background: rgba(0,0,0,0.5); z-index: 1050;">
+
+                    <div class="d-flex justify-content-center align-items-center w-100 h-100">
+
+                        <div class="alert alert-danger shadow rounded-4 p-4 position-relative"
+                             style="min-width: 300px; max-width: 500px;">
+
+                            <div class="fw-semibold mb-2">
+                                Ошибка
+                            </div>
+
+                            <div>
+                                @TempData["Error"]
+                            </div>
+
+                            <button type="button"
+                                    class="btn-close position-absolute top-0 end-0 m-2"
+                                    onclick="document.getElementById('errorOverlay').remove()">
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+            </div>
     </div>
 
     <div class="bg-white">

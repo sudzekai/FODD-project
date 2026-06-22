@@ -1,5 +1,6 @@
 ﻿using API.helpers;
 using API.requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.statuses.interfaces;
 using Shared.dtos.statuses;
@@ -20,6 +21,7 @@ namespace API.controllers.statuses
         }
 
         [HttpGet]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> GetStatuses()
             => await RequestExecutor.Execute(async () =>
             {
@@ -28,6 +30,7 @@ namespace API.controllers.statuses
             }, ModelState);
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> GetStatusById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
@@ -36,6 +39,7 @@ namespace API.controllers.statuses
             }, ModelState);
 
         [HttpPost()]
+        [Authorize(Roles = "Менеджер,Администратор")]
         public async Task<IActionResult> PostStatus(
             [Required(ErrorMessage = "Информация о статусе обязательна")]
             [FromBody] StatusWriteDTO dto)
@@ -47,6 +51,7 @@ namespace API.controllers.statuses
             }, ModelState);
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Менеджер,Администратор")]
         public async Task<IActionResult> PutStatus(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Информация о статусе обязательна")]
@@ -58,6 +63,7 @@ namespace API.controllers.statuses
             }, ModelState);
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> DeleteStatusById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
@@ -66,6 +72,7 @@ namespace API.controllers.statuses
             }, ModelState);
 
         [HttpGet("count")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> GetStatusesCount()
             => await RequestExecutor.Execute(async () =>
             {

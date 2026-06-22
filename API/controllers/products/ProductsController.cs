@@ -20,7 +20,7 @@ namespace API.controllers.products
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts([FromQuery] GetListRequest req)
+        public async Task<IActionResult> GetProducts([FromQuery] GetProductsListRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 var data = await _svc.GetProductsAsync(req);

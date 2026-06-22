@@ -1,7 +1,14 @@
 
+using API.utilities;
 using DB.dbContext;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Services.auth.interfaces;
+using Services.auth.services;
+using Services.categories.interfaces;
+using Services.categories.services;
 using Services.manufacturers.interfaces;
 using Services.manufacturers.services;
 using Services.orders.interfaces;
@@ -19,6 +26,7 @@ using Services.tags.services;
 using Services.unitOfWork;
 using Services.users.interfaces;
 using Services.users.services;
+using System.Text;
 
 namespace API
 {
@@ -41,6 +49,25 @@ namespace API
 
             builder.Services.AddOpenApi();
 
+            builder.Services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+                        )
+                    };
+                });
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -52,6 +79,8 @@ namespace API
 
             app.UseAuthorization();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllers();
 
@@ -62,6 +91,9 @@ namespace API
         {
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            AddUtilityServices(builder);
+            AddAuthServices(builder);
+            AddCategoriesServices(builder);
             AddManufacturersServices(builder);
             AddOrdersServices(builder);
             AddProductsServices(builder);
@@ -70,6 +102,21 @@ namespace API
             AddSuppliersServices(builder);
             AddTagsServices(builder);
             AddUsersServices(builder);
+        }
+
+        private static void AddUtilityServices(WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+        }
+
+        private static void AddAuthServices(WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IAuthService, AuthService>();
+        }
+
+        private static void AddCategoriesServices(WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<ICategoriesService, CategoriesService>();
         }
 
         private static void AddManufacturersServices(WebApplicationBuilder builder)

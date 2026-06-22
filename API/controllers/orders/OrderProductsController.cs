@@ -1,5 +1,6 @@
 ﻿using API.helpers;
 using API.requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.orders.services;
 using Shared.dtos.orders;
@@ -19,6 +20,7 @@ namespace API.controllers.orders
         }
 
         [HttpGet("{id}/products")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> GetOrderProductsByOrderId([FromRoute] ByIdRequest req)
              => await RequestExecutor.Execute(async () =>
              {
@@ -27,6 +29,7 @@ namespace API.controllers.orders
              }, ModelState);
 
         [HttpGet("{id}/products/count")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> GetOrderProductsCountByOrderId([FromRoute] ByIdRequest req)
              => await RequestExecutor.Execute(async () =>
              {
@@ -35,6 +38,7 @@ namespace API.controllers.orders
              }, ModelState);
 
         [HttpGet("{id}/products/sum")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> GetOrderProductsSumCountByOrderId([FromRoute] ByIdRequest req)
              => await RequestExecutor.Execute(async () =>
              {
@@ -43,6 +47,7 @@ namespace API.controllers.orders
              }, ModelState);
 
         [HttpPost("{id}/products/add")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> AddOrderProductByOrderId(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Товар обязателен")]
@@ -54,6 +59,7 @@ namespace API.controllers.orders
              }, ModelState);
 
         [HttpPost("{id}/products/remove")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> RemoveOrderProductByOrderIdAsync(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Товар обязателен")]
@@ -65,6 +71,7 @@ namespace API.controllers.orders
              }, ModelState);
 
         [HttpPost("{id}/products/delete")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> DeleteOrderProductByOrderId(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Товар обязателен")]

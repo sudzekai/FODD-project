@@ -1,4 +1,8 @@
 using Clients.webClients;
+using Clients.webClients.auth.clients;
+using Clients.webClients.auth.interfaces;
+using Clients.webClients.categories.clients;
+using Clients.webClients.categories.interfaces;
 using Clients.webClients.manufacturers.clients;
 using Clients.webClients.manufacturers.interfaces;
 using Clients.webClients.orders.clients;
@@ -25,24 +29,29 @@ namespace WEB
             var builder = WebApplication.CreateBuilder(args);
 
             WebClient.SetBaseUrl("http://localhost:8080");
-
             AddWebClients(builder);
 
+            builder.Services
+                .AddAuthentication("Cookies")
+                .AddCookie("Cookies", options =>
+                {
+                    options.LoginPath = "/Login";
+                });
+
+
+            builder.Services.AddAuthorization();
             builder.Services.AddRazorPages()
                     .AddRazorRuntimeCompilation();
 
             var app = builder.Build();
 
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
+            app.UseHsts();
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
@@ -54,6 +63,8 @@ namespace WEB
 
         private static void AddWebClients(WebApplicationBuilder builder)
         {
+            AddAuthWebClients(builder);
+            AddCategoriesWebClients(builder);
             AddManufacturersWebClients(builder);
             AddOrdersWebClients(builder);
             AddProductsWebClients(builder);
@@ -64,6 +75,15 @@ namespace WEB
             AddUsersWebClients(builder);
         }
 
+        private static void AddAuthWebClients(WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IAuthWebClient, AuthWebClient>();
+        }
+
+        private static void AddCategoriesWebClients(WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<ICategoriesWebClient, CategoriesWebClient>();
+        }
         private static void AddManufacturersWebClients(WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<IManufacturersWebClient, ManufacturersWebClient>();

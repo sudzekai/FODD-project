@@ -1,5 +1,6 @@
 ﻿using API.helpers;
 using API.requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.suppliers.interfaces;
 using Shared.dtos.suppliers;
@@ -36,6 +37,7 @@ namespace API.controllers.suppliers
             }, ModelState);
 
         [HttpPost()]
+        [Authorize(Roles = "Менеджер,Администратор")]
         public async Task<IActionResult> PostSupplier(
             [Required(ErrorMessage = "Информация о поставщике обязательна")]
             [FromBody] SupplierWriteDTO dto)
@@ -47,6 +49,7 @@ namespace API.controllers.suppliers
             }, ModelState);
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Менеджер,Администратор")]
         public async Task<IActionResult> PutSupplier(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Информация о поставщике обязательна")]
@@ -58,6 +61,7 @@ namespace API.controllers.suppliers
             }, ModelState);
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> DeleteSupplierById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {

@@ -1,0 +1,73 @@
+﻿@page "/products/{id:int}"
+@model WEB.Pages.Products.DetailsModel
+@{
+}
+
+
+<div class="row g-2">
+    <div class="col-4">
+        <img src="~/Screenshot 2026-06-15 135809.png"
+        class="rounded-4 shadow"
+                style="width: 100%" />
+    </div>
+
+    <div class="col-5">
+        <div class="bg-white rounded-4 shado p-2">
+            <div class="d-flex flex-column">
+                <label class="fw-semibold fs-3">@Model.Product.Name</label>
+                
+                <hr class="my-1" />
+
+                <label class="fs-6 text-muted">Описание:</label>
+                <label class="fs-5">@Model.Product.Description</label>
+                
+                <hr class="my-1" />
+
+                <div class="row">
+                    <label class="col-3">Цвет:</label>
+                    <label class="col-8">@(string.IsNullOrWhiteSpace(Model.Product.Color) ? "Не указан" : Model.Product.Color)</label>
+                </div>
+
+                <div class="row">
+                    <label class="col-3">Размер:</label>
+                    <label class="col-8">@(string.IsNullOrWhiteSpace(Model.Product.Size.ToString()) ? "Не указан" : Model.Product.Size)</label>
+                </div>
+
+                <div class="row">
+                    <label class="col-3">Производитель:</label>
+                    <label class="col-8">@Model.ManufacturerName</label>
+                </div>
+
+                <div class="row">
+                    <label class="col-3">Поставщик:</label>
+                    <label class="col-8">@Model.SupplierName</label>
+                </div>
+
+                <div class="row">
+                    <label class="col-3">Категория:</label>
+                    <label class="col-8">@Model.CategoryName</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-3">
+        <div class="bg-white rounded-4 p-2 d-flex flex-column gap-1">
+            @if (Model.Product.Price * ((100 - Model.Product.Discount) / 100m) is var price && Model.Product.Price != price)
+            {
+                <div class="d-flex gap-1 align-items-baseline">
+                    <label class="fw-semibold fs-3 text-success">@Math.Round(price, 2) руб.</label>
+                    <label class="text-decoration-line-through text-muted">@Math.Round(Model.Product.Price, 2) руб.</label>
+                </div>
+            }
+            else
+            {
+                <label class="fw-semibold fs-3">@Math.Round(price, 2) руб.</label>
+            }
+
+            <form method="post">
+
+            </form>
+        </div>
+    </div>
+</div>

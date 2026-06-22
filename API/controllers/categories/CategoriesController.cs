@@ -2,78 +2,78 @@
 using API.requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Services.manufacturers.interfaces;
-using Shared.dtos.manufacturers;
+using Services.categories.interfaces;
+using Shared.dtos.categories;
 using Shared.requests;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.controllers.Manufacturers
+namespace API.controllers.Categories
 {
     [ApiController]
     [Route("[controller]")]
-    public class ManufacturersController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
-        private readonly IManufacturersService _svc;
+        private readonly ICategoriesService _svc;
 
-        public ManufacturersController(IManufacturersService svc)
+        public CategoriesController(ICategoriesService svc)
         {
             _svc = svc;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetManufacturers([FromQuery] GetListRequest req)
+        public async Task<IActionResult> GetCategories([FromQuery] GetListRequest req)
             => await RequestExecutor.Execute(async () =>
             {
-                var data = await _svc.GetManufacturersAsync(req);
+                var data = await _svc.GetCategoriesAsync(req);
                 return ResponseBuilder.BuildOk(data);
             }, ModelState);
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetManufacturerById([FromRoute] ByIdRequest req)
+        public async Task<IActionResult> GetCategoryById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
-                var data = await _svc.GetManufacturerByIdAsync(req.Id);
+                var data = await _svc.GetCategoryByIdAsync(req.Id);
                 return ResponseBuilder.BuildOk(data);
             }, ModelState);
 
         [HttpPost()]
         [Authorize(Roles = "Менеджер,Администратор")]
-        public async Task<IActionResult> PostManufacturer(
-            [Required(ErrorMessage = "Информация о производителе обязательна")]
-            [FromBody] ManufacturerWriteDTO dto)
+        public async Task<IActionResult> PostCategory(
+            [Required(ErrorMessage = "Информация о категории обязательна")]
+            [FromBody] CategoryWriteDTO dto)
             => await RequestExecutor.Execute(async () =>
             {
-                var id = await _svc.CreateManufacturerAsync(dto);
-                var data = await _svc.GetManufacturerByIdAsync(id);
+                var id = await _svc.CreateCategoryAsync(dto);
+                var data = await _svc.GetCategoryByIdAsync(id);
                 return ResponseBuilder.BuildCreated(data);
             }, ModelState);
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Менеджер,Администратор")]
-        public async Task<IActionResult> PutManufacturer(
+        public async Task<IActionResult> PutCategory(
             [FromRoute] ByIdRequest req,
-            [Required(ErrorMessage = "Информация о производителе обязательна")]
-            [FromBody] ManufacturerWriteDTO dto)
+            [Required(ErrorMessage = "Информация о категории обязательна")]
+            [FromBody] CategoryWriteDTO dto)
             => await RequestExecutor.Execute(async () =>
             {
-                await _svc.UpdateManufacturerByIdAsync(req.Id, dto);
+                await _svc.UpdateCategoryByIdAsync(req.Id, dto);
                 return ResponseBuilder.BuildOk<object?>(null);
             }, ModelState);
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Администратор")]
-        public async Task<IActionResult> DeleteManufacturerById([FromRoute] ByIdRequest req)
+        public async Task<IActionResult> DeleteCategoryById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
-                await _svc.DeleteManufacturerByIdAsync(req.Id);
+                await _svc.DeleteCategoryByIdAsync(req.Id);
                 return ResponseBuilder.BuildOk<object?>(null);
             }, ModelState);
 
         [HttpGet("count")]
-        public async Task<IActionResult> GetManufacturersCount()
+        public async Task<IActionResult> GetCategoriesCount()
             => await RequestExecutor.Execute(async () =>
             {
-                var data = await _svc.GetManufacturersCountAsync();
+                var data = await _svc.GetCategoriesCountAsync();
                 return ResponseBuilder.BuildOk(data);
             }, ModelState);
     }

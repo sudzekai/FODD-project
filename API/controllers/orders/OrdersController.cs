@@ -1,5 +1,6 @@
 ﻿using API.helpers;
 using API.requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.orders.interfaces;
 using Shared.dtos.orders;
@@ -20,6 +21,7 @@ namespace API.controllers.orders
         }
 
         [HttpGet]
+        [Authorize(Roles = "Менеджер,Администратор")]
         public async Task<IActionResult> GetOrders([FromQuery] GetListRequest req)
             => await RequestExecutor.Execute(async () =>
             {
@@ -28,6 +30,7 @@ namespace API.controllers.orders
             }, ModelState);
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> GetOrderById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
@@ -36,6 +39,7 @@ namespace API.controllers.orders
             }, ModelState);
 
         [HttpPut("{id}/status")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> PutOrder(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Информация о статусе обязательна")]
@@ -47,7 +51,8 @@ namespace API.controllers.orders
             }, ModelState);
 
         [HttpPut("{id}/delivery")]
-        public async Task<IActionResult> PutOrderPricing(
+        [Authorize(Roles = "Менеджер,Администратор")]
+        public async Task<IActionResult> PutOrderDelivery(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Информация о доставке товара обязательна")]
             [FromBody] OrderDeliveryUpdateDTO dto)
@@ -58,7 +63,8 @@ namespace API.controllers.orders
             }, ModelState);
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> PutOrderRelations([FromRoute] ByIdRequest req)
+        [Authorize(Roles = "Администратор")]
+        public async Task<IActionResult> DeleteOrder([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 await _svc.DeleteOrderByIdAsync(req.Id);

@@ -1,5 +1,6 @@
 ﻿using API.helpers;
 using API.requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.roles.interfaces;
 using Shared.requests;
@@ -18,6 +19,7 @@ namespace API.controllers.roles
         }
 
         [HttpGet]
+        [Authorize(Roles = "Менеджер,Администратор")]
         public async Task<IActionResult> GetRoles([FromQuery] GetListRequest req)
             => await RequestExecutor.Execute(async () =>
             {
@@ -26,6 +28,7 @@ namespace API.controllers.roles
             }, ModelState);
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Менеджер,Администратор")]
         public async Task<IActionResult> GetRoleById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
@@ -34,6 +37,7 @@ namespace API.controllers.roles
             }, ModelState);
 
         [HttpGet("count")]
+        [Authorize(Roles = "Менеджер,Администратор")]
         public async Task<IActionResult> GetRolesCount()
             => await RequestExecutor.Execute(async () =>
             {

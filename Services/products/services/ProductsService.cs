@@ -20,7 +20,7 @@ namespace Services.products.services
             _uow = uow;
         }
 
-        public async Task<List<ProductSimpleDTO>> GetProductsAsync(GetListRequest req)
+        public async Task<List<ProductSimpleDTO>> GetProductsAsync(GetProductsListRequest req)
         {
             var query = _products.AsQueryable();
 
@@ -30,16 +30,46 @@ namespace Services.products.services
                     p.Name.Contains(req.SearchTerm)
                     || p.Article.Contains(req.SearchTerm)
                     || p.Tags.Any(t => t.Name.Contains(req.SearchTerm))
-                    || p.Color.Contains(req.SearchTerm)
-                    || p.Size.ToString().Contains(req.SearchTerm)
                 );
             }
 
-            query = req.OrderDirection switch
+            if (req.OrderDirection == "asc")
             {
-                "asc" => query.OrderBy(p => p.Id),
-                _ => query.OrderByDescending(p => p.Id)
-            };
+                if (req.OrderBy == "price")
+                    query = query.OrderBy(p => p.Price);
+                else if (req.OrderBy == "discount")
+                    query = query.OrderBy(p => p.Discount);
+                else
+                    query = query.OrderBy(p => p.Id);
+            }
+            else
+            {
+                if (req.OrderBy == "price")
+                    query = query.OrderByDescending(p => p.Price);
+                else if (req.OrderBy == "discount")
+                    query = query.OrderByDescending(p => p.Discount);
+                else
+                    query = query.OrderByDescending(p => p.Id);
+            }
+
+            if (req.DiscountsOnly == "true")
+                query = query.Where(p => p.Discount > 0);
+
+            if (!string.IsNullOrWhiteSpace(req.Color))
+                query = query.Where(p => p.Color.Contains(req.Color));
+
+            if (req.Size > 0)
+                query = query.Where(p => p.Size == req.Size);
+
+            if (req.ManufacturerId > 0)
+                query = query.Where(p => p.ManufacturerId == req.ManufacturerId);
+
+            if (req.CategoryId > 0)
+                query = query.Where(p => p.CategoryId == req.CategoryId);
+
+            if (req.SupplierId > 0)
+                query = query.Where(p => p.SupplierId == req.SupplierId);
+
 
             query = query.Skip(req.Offset).Take(req.Limit);
 

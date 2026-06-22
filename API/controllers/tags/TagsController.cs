@@ -1,5 +1,6 @@
 ﻿using API.helpers;
 using API.requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.tags.interfaces;
 using Shared.dtos.tags;
@@ -36,6 +37,7 @@ namespace API.controllers.tags
             }, ModelState);
 
         [HttpPost()]
+        [Authorize(Roles = "Менеджер,Администратор")]
         public async Task<IActionResult> PostTag(
             [Required(ErrorMessage = "Информация о тэге обязательна")]
             [FromBody] TagWriteDTO dto)
@@ -47,6 +49,7 @@ namespace API.controllers.tags
             }, ModelState);
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Менеджер,Администратор")]
         public async Task<IActionResult> PutTag(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Информация о тэге обязательна")]
@@ -58,6 +61,7 @@ namespace API.controllers.tags
             }, ModelState);
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> DeleteTagById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {

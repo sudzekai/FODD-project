@@ -1,5 +1,6 @@
 ﻿using API.helpers;
 using API.requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.users.interfaces;
 
@@ -17,6 +18,7 @@ namespace API.controllers.users
         }
 
         [HttpGet("{id}/orders")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> GetUserOrdersByUserId([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
@@ -26,6 +28,7 @@ namespace API.controllers.users
             }, ModelState);
 
         [HttpGet("{id}/orders/count")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> GetUserOrdersCountByUserId([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
@@ -35,6 +38,7 @@ namespace API.controllers.users
             }, ModelState);
 
         [HttpPost("{id}/orders")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> PostUserOrderByUserId([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {

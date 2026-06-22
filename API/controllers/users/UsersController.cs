@@ -1,6 +1,7 @@
 ﻿using API.helpers;
 using API.requests;
 using DB.models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.users.interfaces;
 using Shared.dtos.users;
@@ -21,6 +22,7 @@ namespace API.controllers.users
         }
 
         [HttpGet(Name = "GetUsers")]
+        [Authorize(Roles = "Менеджер,Администратор")]
         public async Task<IActionResult> GetUsers([FromQuery] GetListRequest request)
             => await RequestExecutor.Execute(async () =>
             {
@@ -30,6 +32,7 @@ namespace API.controllers.users
             }, ModelState);
 
         [HttpGet(template: "{id}", Name = "GetUserById")]
+        [Authorize(Roles = "Менеджер,Администратор")]
         public async Task<IActionResult> GetUserById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
@@ -51,6 +54,7 @@ namespace API.controllers.users
             }, ModelState);
 
         [HttpPut("{id}", Name = "PutUserById")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> PutUserById(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Данные пользователя (login, password, fullName) обязательны")]
@@ -63,6 +67,7 @@ namespace API.controllers.users
             }, ModelState);
 
         [HttpPut("{id}/password", Name = "PutUserPasswordById")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> PutUserPasswordById(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Данные пользователя (password) обязательны")]
@@ -75,6 +80,7 @@ namespace API.controllers.users
             }, ModelState);
 
         [HttpPut("{id}/role", Name = "PutUserRoleById")]
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> PutUserRoleById(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Данные пользователя (roleId) обязательны")]
@@ -87,6 +93,7 @@ namespace API.controllers.users
             }, ModelState);
 
         [HttpDelete("{id}", Name = "DeleteUserById")]
+        [Authorize(Roles = "Администратор")]
         public async Task<IActionResult> DeleteUserById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {
@@ -96,6 +103,7 @@ namespace API.controllers.users
             }, ModelState);
 
         [HttpPut("count", Name = "GetUsersCount")]
+        [Authorize(Roles = "Менеджер,Администратор")]
         public async Task<IActionResult> GetCount()
             => await RequestExecutor.Execute(async () =>
             {

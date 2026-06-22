@@ -1,0 +1,32 @@
+﻿@page
+@model WEB.Pages.LoginModel
+@{
+    ViewData["Title"] = "Вход";
+}
+
+<div class="d-flex w-100 h-100 justify-content-center align-items-center">
+    <div class="bg-white p-2 rounded-4 shadow d-flex flex-column"
+    style="width:300px">
+        <h1 class="fw-semibold m-0 py-2 text-center">Shoes Store</h1>
+        <h3 class="fw-semibold m-0 mb-2 text-center">Вход</h3>
+        <form method="post">
+            <div class="d-flex flex-column gap-1">
+                <label>Логин:</label>
+                <input type="text" class="form-control rounded-4" asp-for="@Model.AuthRequest.Login" placeholder="Логин..." />
+                
+                <label>Пароль:</label>
+                <input type="password" class="form-control rounded-4" asp-for="@Model.AuthRequest.Password" placeholder="Пароль..." />
+
+                <button type="submit"
+                        class="btn btn-primary rounded-4 mt-2">
+                    Войти
+                </button>
+
+                <a type="submit" href="/register"
+                   class="btn btn-outline-dark rounded-4">
+                    Регистрация
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

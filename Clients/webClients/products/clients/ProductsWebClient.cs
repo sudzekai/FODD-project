@@ -23,7 +23,7 @@ namespace Clients.webClients.products.clients
         /// </summary>
         /// <param name="req">Параметры запроса: фильтры, сортировка, страница и размер страницы.</param>
         /// <returns>Список упрощённых DTO товаров (<see cref="ProductSimpleDTO"/>).</returns>
-        public async Task<List<ProductSimpleDTO>> GetProductsAsync(GetListRequest req)
+        public async Task<List<ProductSimpleDTO>> GetProductsAsync(GetProductsListRequest req)
             => await WebClient.GetAsync<List<ProductSimpleDTO>>(
                 $"{_base}{QueryBuilder.ToQueryString(req)}"
             ) ?? [];
