@@ -1,0 +1,140 @@
+﻿@page
+@model WEB.Pages.Orders.IndexModel
+@{
+    ViewData["Title"] = "Заказы";
+}
+
+<form method="get">
+
+    <div class="bg-white p-2 shadow rounded-4">
+        <h2 class="fw-semibold">Заказы</h2>
+
+        <div class="mt-1">
+            <div class="d-flex gap-1">
+                <input type="text"
+                       asp-for="GetRequest.SearchTerm"
+                       class="form-control rounded-4"
+                       placeholder="Поиск..." />
+
+                <button type="submit" class="btn btn-primary rounded-4">
+                    <i class="bi-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-2 row g-2">
+
+        <!-- FILTERS -->
+        <div class="col-2">
+            <div class="p-2 bg-white rounded-4 d-flex flex-column gap-2 shadow">
+
+                <div class="fw-semibold fs-5">Сортировка</div>
+
+                <select asp-for="GetRequest.OrderDirection" class="form-select rounded-4">
+                    <option value="desc">Убывание</option>
+                    <option value="asc">Возрастание</option>
+                </select>
+
+                <select asp-for="GetRequest.OrderBy" class="form-select rounded-4">
+                    <option value="">По умолчанию</option>
+                    <option value="creationDate">Дата создания</option>
+                    <option value="deliveryDate">Дата доставки</option>
+                </select>
+
+                <hr />
+
+                <label>Статус</label>
+                <select asp-for="GetRequest.StatusId"
+                       asp-items="Model.Statuses"
+                       class="form-control rounded-4">
+                    <option value="" selected>Все</option>   
+                </select>
+
+                <hr />
+
+                <div class="fw-semibold">Дата создания</div>
+
+                <input asp-for="GetRequest.CreationDateTimeStart"
+                       type="datetime-local"
+                       class="form-control rounded-4" />
+
+                <input asp-for="GetRequest.CreationDateTimeEnd"
+                       type="datetime-local"
+                       class="form-control rounded-4" />
+
+                <div class="fw-semibold mt-2">Дата доставки</div>
+
+                <input asp-for="GetRequest.DeliveryDateTimeStart"
+                       type="datetime-local"
+                       class="form-control rounded-4" />
+
+                <input asp-for="GetRequest.DeliveryDateTimeEnd"
+                       type="datetime-local"
+                       class="form-control rounded-4" />
+
+                <hr />
+
+                <button class="btn btn-primary rounded-4">Применить</button>
+
+                <button class="btn btn-outline-dark rounded-4"
+                        type="submit"
+                        name="isReset"
+                        value="true">
+                    Сбросить
+                </button>
+
+            </div>
+        </div>
+
+        <!-- ORDERS -->
+        <div class="col-10">
+            <div class="p-2 bg-white shadow rounded-4">
+                <div class="row g-2">
+
+                    @foreach (var order in Model.Orders)
+                    {
+                        <div class="col-4">
+                            <a class="text-decoration-none text-dark"
+                               href="/orders/@order.Id">
+
+                                <div class="border rounded-4 p-3 h-100 d-flex flex-column gap-1">
+
+                                    <div class="fw-semibold">
+                                        Заказ #@order.Id
+                                    </div>
+
+                                    <div class="text-muted">
+                                        Создан: @order.CreationDateTime.ToString("g")
+                                    </div>
+
+                                    <div>
+                                        Доставка:
+                                        @(order.DeliveryDate?.ToString("g") ?? "—")
+                                    </div>
+
+                                    <div>
+                                        Статус: @order.StatusId
+                                    </div>
+
+                                    <div>
+                                        Код: @(order.ReceiptCode ?? 0)
+                                    </div>
+
+                                    <div>
+                                        Товаров: @order.ProductIds?.Count
+                                    </div>
+
+                                </div>
+
+                            </a>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>

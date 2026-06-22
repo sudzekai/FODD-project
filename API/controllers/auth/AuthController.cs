@@ -37,7 +37,7 @@ namespace API.controllers.auth
 
                 var token = _tokenService.GenerateToken(user.Id.ToString(), role.Name, user.FullName);
 
-                return ResponseBuilder.BuildOk(new AuthResponse(role.Name, token, user.FullName));
+                return ResponseBuilder.BuildOk(new AuthResponse(role.Name, token, user.FullName, user.Id));
             }, ModelState);
     }
 }

@@ -22,7 +22,7 @@ namespace API.controllers.orders
 
         [HttpGet]
         [Authorize(Roles = "Менеджер,Администратор")]
-        public async Task<IActionResult> GetOrders([FromQuery] GetListRequest req)
+        public async Task<IActionResult> GetOrders([FromQuery] GetOrdersListRequest req)
             => await RequestExecutor.Execute(async () =>
             {
                 var data = await _svc.GetOrdersAsync(req);

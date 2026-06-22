@@ -28,7 +28,13 @@ namespace WEB
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            WebClient.SetBaseUrl("http://localhost:8080");
+            var httpClient = new HttpClient();
+            var webClient = new WebClient(httpClient);
+
+            webClient.SetBaseUrl("http://localhost:8080");
+
+            builder.Services.AddSingleton<IWebClient>(webClient);
+
             AddWebClients(builder);
 
             builder.Services
@@ -38,17 +44,14 @@ namespace WEB
                     options.LoginPath = "/Login";
                 });
 
-
             builder.Services.AddAuthorization();
             builder.Services.AddRazorPages()
-                    .AddRazorRuntimeCompilation();
+                .AddRazorRuntimeCompilation();
 
             var app = builder.Build();
 
             app.UseHsts();
-
             app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthentication();
@@ -76,18 +79,13 @@ namespace WEB
         }
 
         private static void AddAuthWebClients(WebApplicationBuilder builder)
-        {
-            builder.Services.AddScoped<IAuthWebClient, AuthWebClient>();
-        }
+            => builder.Services.AddScoped<IAuthWebClient, AuthWebClient>();
 
         private static void AddCategoriesWebClients(WebApplicationBuilder builder)
-        {
-            builder.Services.AddScoped<ICategoriesWebClient, CategoriesWebClient>();
-        }
+            => builder.Services.AddScoped<ICategoriesWebClient, CategoriesWebClient>();
+
         private static void AddManufacturersWebClients(WebApplicationBuilder builder)
-        {
-            builder.Services.AddScoped<IManufacturersWebClient, ManufacturersWebClient>();
-        }
+            => builder.Services.AddScoped<IManufacturersWebClient, ManufacturersWebClient>();
 
         private static void AddProductsWebClients(WebApplicationBuilder builder)
         {
@@ -102,24 +100,16 @@ namespace WEB
         }
 
         private static void AddRolesWebClients(WebApplicationBuilder builder)
-        {
-            builder.Services.AddScoped<IRolesWebClient, RolesWebClient>();
-        }
+            => builder.Services.AddScoped<IRolesWebClient, RolesWebClient>();
 
         private static void AddStatusesWebClients(WebApplicationBuilder builder)
-        {
-            builder.Services.AddScoped<IStatusesWebClient, StatusesWebClient>();
-        }
+            => builder.Services.AddScoped<IStatusesWebClient, StatusesWebClient>();
 
         private static void AddSuppliersWebClients(WebApplicationBuilder builder)
-        {
-            builder.Services.AddScoped<ISuppliersWebClient, SuppliersWebClient>();
-        }
+            => builder.Services.AddScoped<ISuppliersWebClient, SuppliersWebClient>();
 
         private static void AddTagsWebClients(WebApplicationBuilder builder)
-        {
-            builder.Services.AddScoped<ITagsWebClient, TagsWebClient>();
-        }
+            => builder.Services.AddScoped<ITagsWebClient, TagsWebClient>();
 
         private static void AddUsersWebClients(WebApplicationBuilder builder)
         {

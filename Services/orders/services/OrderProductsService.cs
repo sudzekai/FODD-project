@@ -48,18 +48,18 @@ namespace Services.orders.services
             return result;
         }
 
-        public async Task AddOrderProductByOrderIdAsync(int orderId, OrderProductUpdateDTO dto)
+        public async Task AddOrderProductByUserIdAsync(int userId, OrderProductUpdateDTO dto)
         {
             var order = await _orders
-                .FirstOrDefaultAsync(o => o.Id == orderId)
-                ?? throw new NotFoundException("Заказ с таким id не найден");
+                .FirstOrDefaultAsync(o => o.StatusId == 1 && o.UserId == userId)
+                ?? throw new NotFoundException("Заказ пользователя в статусе сборки не найден");
 
             var product = await _products
                 .FirstOrDefaultAsync(p => p.Id == dto.ProductId)
                 ?? throw new NotFoundException("Товар с таким id не найден");
 
             var existing = await _orderProducts
-                .FirstOrDefaultAsync(op => op.OrderId == orderId && op.ProductId == dto.ProductId);
+                .FirstOrDefaultAsync(op => op.OrderId == order.Id && op.ProductId == dto.ProductId);
 
             if (existing != null)
             {
@@ -69,7 +69,7 @@ namespace Services.orders.services
             {
                 var orderProduct = new OrderProduct
                 {
-                    OrderId = orderId,
+                    OrderId = order.Id,
                     ProductId = dto.ProductId,
                     Quantity = 1
                 };
@@ -87,14 +87,14 @@ namespace Services.orders.services
             }
         }
 
-        public async Task RemoveOrderProductByOrderIdAsync(int orderId, OrderProductUpdateDTO dto)
+        public async Task RemoveOrderProductByUserIdAsync(int userId, OrderProductUpdateDTO dto)
         {
             var order = await _orders
-                .FirstOrDefaultAsync(o => o.Id == orderId)
-                ?? throw new NotFoundException("Заказ с таким id не найден");
+             .FirstOrDefaultAsync(o => o.StatusId == 1 && o.UserId == userId)
+             ?? throw new NotFoundException("Заказ пользователя в статусе сборки не найден");
 
             var existing = await _orderProducts
-                .FirstOrDefaultAsync(op => op.OrderId == orderId && op.ProductId == dto.ProductId)
+                .FirstOrDefaultAsync(op => op.OrderId == order.Id && op.ProductId == dto.ProductId)
                 ?? throw new NotFoundException("Такого товара в заказе нет");
 
             if (existing.Quantity == 1)
@@ -112,14 +112,14 @@ namespace Services.orders.services
             }
         }
 
-        public async Task DeleteOrderProductByOrderIdAsync(int orderId, OrderProductUpdateDTO dto)
+        public async Task DeleteOrderProductByUserIdAsync(int userId, OrderProductUpdateDTO dto)
         {
             var order = await _orders
-                .FirstOrDefaultAsync(o => o.Id == orderId)
-                ?? throw new NotFoundException("Заказ с таким id не найден");
+               .FirstOrDefaultAsync(o => o.StatusId == 1 && o.UserId == userId)
+               ?? throw new NotFoundException("Заказ пользователя в статусе сборки не найден");
 
             var existing = await _orderProducts
-                .FirstOrDefaultAsync(op => op.OrderId == orderId && op.ProductId == dto.ProductId)
+                .FirstOrDefaultAsync(op => op.OrderId == order.Id && op.ProductId == dto.ProductId)
                 ?? throw new NotFoundException("Такого товара в заказе нет");
 
             _orderProducts.Remove(existing);

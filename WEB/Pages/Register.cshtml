@@ -1,0 +1,55 @@
+﻿@page
+@model WEB.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<div class="min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="bg-white p-3 rounded-4 shadow-sm" style="width: 360px">
+
+        <h2 class="fw-semibold text-center mb-1">Shoes Store</h2>
+        <div class="text-center text-muted mb-3">Регистрация</div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger py-2 rounded-4 text-center">
+                @TempData["Error"]
+            </div>
+        }
+
+        <form method="post">
+
+            <div class="mb-2">
+                <label class="form-label">Имя</label>
+                <input asp-for="UserCreateDTO.FullName"
+                       class="form-control rounded-4"
+                       placeholder="Введите имя" />
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Логин</label>
+                <input asp-for="UserCreateDTO.Login"
+                       class="form-control rounded-4"
+                       placeholder="Введите логин" />
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Пароль</label>
+                <input asp-for="UserCreateDTO.Password"
+                       type="password"
+                       class="form-control rounded-4"
+                       placeholder="Введите пароль" />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 rounded-4 mb-2">
+                Зарегистрироваться
+            </button>
+
+            <a href="/login" class="btn btn-outline-secondary w-100 rounded-4">
+                Уже есть аккаунт
+            </a>
+
+        </form>
+
+    </div>
+</div>

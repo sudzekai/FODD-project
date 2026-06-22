@@ -34,9 +34,10 @@ namespace API.controllers.products
             ProductTagsUpdateDTO dto)
             => await RequestExecutor.Execute(async () =>
             {
-                var data = _productTagsSvc.AddBatchProductTagsById(req.Id, dto);
-                return ResponseBuilder.BuildOk(data);
+                await _productTagsSvc.AddBatchProductTagsById(req.Id, dto);
+                return ResponseBuilder.BuildOk<object?>(default);
             }, ModelState);
+
 
         [HttpPost("{id}/tags/remove")]
         public async Task<IActionResult> RemoveProductTagById(
@@ -46,8 +47,8 @@ namespace API.controllers.products
             ProductTagsUpdateDTO dto)
             => await RequestExecutor.Execute(async () =>
             {
-                var data = _productTagsSvc.DeleteBatchProductTagsById(req.Id, dto);
-                return ResponseBuilder.BuildOk(data);
+                await _productTagsSvc.DeleteBatchProductTagsById(req.Id, dto);
+                return ResponseBuilder.BuildOk<object?>(default);
             }, ModelState);
 
         [HttpGet("{id}/tags/count")]

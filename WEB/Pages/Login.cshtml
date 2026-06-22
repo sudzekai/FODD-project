@@ -4,29 +4,43 @@
     ViewData["Title"] = "Вход";
 }
 
-<div class="d-flex w-100 h-100 justify-content-center align-items-center">
-    <div class="bg-white p-2 rounded-4 shadow d-flex flex-column"
-    style="width:300px">
-        <h1 class="fw-semibold m-0 py-2 text-center">Shoes Store</h1>
-        <h3 class="fw-semibold m-0 mb-2 text-center">Вход</h3>
-        <form method="post">
-            <div class="d-flex flex-column gap-1">
-                <label>Логин:</label>
-                <input type="text" class="form-control rounded-4" asp-for="@Model.AuthRequest.Login" placeholder="Логин..." />
-                
-                <label>Пароль:</label>
-                <input type="password" class="form-control rounded-4" asp-for="@Model.AuthRequest.Password" placeholder="Пароль..." />
+<div class="min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="bg-white p-3 rounded-4 shadow-sm" style="width: 340px">
 
-                <button type="submit"
-                        class="btn btn-primary rounded-4 mt-2">
-                    Войти
-                </button>
+        <h2 class="fw-semibold text-center mb-1">Shoes Store</h2>
+        <div class="text-center text-muted mb-3">Авторизация</div>
 
-                <a type="submit" href="/register"
-                   class="btn btn-outline-dark rounded-4">
-                    Регистрация
-                </a>
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger py-2 rounded-4 text-center">
+                @TempData["Error"]
             </div>
+        }
+
+        <form method="post">
+            <div class="mb-2">
+                <label class="form-label">Логин</label>
+                <input asp-for="AuthRequest.Login"
+                       class="form-control rounded-4"
+                       placeholder="Введите логин" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Пароль</label>
+                <input asp-for="AuthRequest.Password"
+                       type="password"
+                       class="form-control rounded-4"
+                       placeholder="Введите пароль" />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 rounded-4 mb-2">
+                Войти
+            </button>
+
+            <a href="/register" class="btn btn-outline-secondary w-100 rounded-4">
+                Регистрация
+            </a>
         </form>
+
     </div>
 </div>

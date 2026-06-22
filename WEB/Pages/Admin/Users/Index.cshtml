@@ -1,0 +1,88 @@
+﻿@page
+@model WEB.Pages.Admin.Users.IndexModel
+
+@{
+    ViewData["Title"] = "Пользователи";
+}
+
+<div class="mb-2">
+    <form method="get" class="d-flex flex-column gap-2">
+
+        <div class="bg-white p-2 rounded-4 d-flex gap-1">
+            <h2 class="m-0 fw-semibold me-3">Пользователи</h2>
+                <input asp-for="GetRequest.SearchTerm"
+                       class="form-control rounded-4"
+                       placeholder="Поиск..." />
+            <button class="btn btn-primary rounded-4">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+
+        <div class="bg-white p-2 rounded-4">
+            <div class="col-3">
+                <label class="form-label">Сортировка</label>
+                <select asp-for="GetRequest.OrderDirection"
+                        class="form-select rounded-4">
+                    <option value="desc">По убыванию</option>
+                    <option value="asc">По возрастанию</option>
+                </select>
+            </div>
+
+            <div class="col-12 d-flex gap-2 mt-2">
+                <button class="btn btn-primary rounded-4">
+                    Применить
+                </button>
+
+                <a href="/admin/users"
+                   class="btn btn-outline-dark rounded-4">
+                    Сбросить всё
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="bg-white p-2 shadow rounded-4 mb-2">
+
+    @if (Model.Users == null || !Model.Users.Any())
+    {
+        <div class="text-muted text-center py-4">
+            Пользователи отсутствуют
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+
+                <thead>
+                    <tr class="text-muted">
+                        <th>ID</th>
+                        <th>Логин</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.Users)
+                    {
+                        <tr style="cursor:pointer"
+                            onclick="window.location.href='/admin/users/@item.Id'">
+
+                            <td>@item.Id</td>
+                            <td>@item.Login</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    }
+</div>
+
+<div class="bg-white p-2 rounded-4">
+    <a class="btn btn-outline-primary d-flex align-items-center justify-content-center rounded-4"
+       href="/admin/users/create">
+        <i class="bi bi-plus-lg fs-5 me-2"></i>
+        Создать пользователя
+    </a>
+</div>

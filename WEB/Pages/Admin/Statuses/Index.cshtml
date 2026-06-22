@@ -1,0 +1,65 @@
+﻿@page
+@model WEB.Pages.Admin.Statuses.IndexModel
+@{
+    ViewData["Title"] = "Статусы";
+}
+
+<div class="bg-white p-2 shadow rounded-4">
+    <h2 class="fw-semibold m-0">
+        Статусы
+    </h2>
+</div>
+
+<div class="mt-2 bg-white p-3 shadow rounded-4">
+
+    @if (Model.Statuses == null || !Model.Statuses.Any())
+    {
+        <div class="d-flex flex-column gap-2">
+            <div class="text-muted text-center py-4">
+                Статусы отсутствуют
+            </div>
+
+            <a class="btn btn-outline-primary rounded-4 d-flex align-items-center justify-content-center align-self-center"
+               href="/admin/status/create">
+                <i class="bi-plus-lg me-1"></i>
+                Создать
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-2">
+
+            @foreach (var item in Model.Statuses)
+            {
+                <div class="col-4">
+                    <a class="border rounded-4 p-3 h-100 d-flex flex-column justify-content-center gap-2 text-decoration-none"
+                       href="/admin/statuses/@item.Id">
+
+                        <div class="fw-semibold text-dark fs-4">
+                            <i class="bi bi-check-lg"></i>
+                            @item.Name
+                        </div>
+
+                        <div class="text-muted small text-dark">
+                            ID: @item.Id
+                        </div>
+
+                    </a>
+                </div>
+            }
+
+            <div class="col-4">
+                <a class="btn btn-outline-primary rounded-4 p-3 h-100 d-flex flex-column justify-content-center"
+                   href="/admin/statuses/create">
+
+                    <i class="bi-plus-lg fs-3"></i>
+                    Новый статус
+
+                </a>
+            </div>
+
+        </div>
+    }
+
+</div>

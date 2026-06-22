@@ -6,86 +6,44 @@ using Shared.requests;
 namespace Clients.webClients.products.clients
 {
     /// <summary>
-    /// Веб-клиент для работы с ресурсом "товары" на сервере.
-    /// Обёртка над статическим `WebClient`, формирует URL по базовому пути `/products`
-    /// и предоставляет асинхронные методы для CRUD-операций и получения метаданных.
-    /// Все методы выполняют HTTP-запросы и при ошибках проксируют исключения от `WebClient`.
+    /// Веб-клиент для работы с товарами.
     /// </summary>
     public class ProductsWebClient : IProductsWebClient
     {
-        /// <summary>
-        /// Базовый путь для всех запросов этого клиента (префикс эндпоинтов).
-        /// </summary>
         private const string _base = "/products";
 
-        /// <summary>
-        /// Получить список товаров с учётом параметров фильтрации/пагинации из запроса.
-        /// </summary>
-        /// <param name="req">Параметры запроса: фильтры, сортировка, страница и размер страницы.</param>
-        /// <returns>Список упрощённых DTO товаров (<see cref="ProductSimpleDTO"/>).</returns>
-        public async Task<List<ProductSimpleDTO>> GetProductsAsync(GetProductsListRequest req)
-            => await WebClient.GetAsync<List<ProductSimpleDTO>>(
-                $"{_base}{QueryBuilder.ToQueryString(req)}"
-            ) ?? [];
+        private readonly IWebClient _client;
 
-        /// <summary>
-        /// Получить полную информацию о товаре по его идентификатору.
-        /// </summary>
-        /// <param name="id">Идентификатор товара.</param>
-        /// <returns>DTO с полной информацией о товаре (<see cref="ProductDTO"/>).</returns>
-        public async Task<ProductDTO> GetProductByIdAsync(int id)
-            => await WebClient.GetAsync<ProductDTO>($"{_base}/{id}");
+        public ProductsWebClient(IWebClient client)
+        {
+            _client = client;
+        }
 
-        /// <summary>
-        /// Создать новый товар на сервере.
-        /// </summary>
-        /// <param name="dto">Модель для создания товара (<see cref="ProductCreateDTO"/>).</param>
-        /// <returns>
-        /// DTO созданного товара (<see cref="ProductDTO"/>). Может быть <c>null</c>, если сервер вернул пустой ответ.
-        /// </returns>
-        public async Task<ProductDTO?> CreateProductAsync(ProductCreateDTO dto)
-            => await WebClient.PostAsync<ProductDTO>(_base, dto);
+        public Task<List<ProductSimpleDTO>> GetProductsAsync(GetProductsListRequest req, string token, CancellationToken ct = default)
+            => _client.GetAsync<List<ProductSimpleDTO>>(
+                $"{_base}{QueryBuilder.ToQueryString(req)}",
+                token,
+                ct);
 
-        /// <summary>
-        /// Обновить основную информацию о товаре (без цен и связей).
-        /// </summary>
-        /// <param name="id">Идентификатор обновляемого товара.</param>
-        /// <param name="dto">Модель обновления (<see cref="ProductUpdateDTO"/>).</param>
-        /// <returns>Асинхронная задача, завершающаяся по окончании операции.</returns>
-        public async Task UpdateProductAsync(int id, ProductUpdateDTO dto)
-            => await WebClient.PutAsync<object?>($"{_base}/{id}", dto);
+        public Task<ProductDTO> GetProductByIdAsync(int id, string token, CancellationToken ct = default)
+            => _client.GetAsync<ProductDTO>($"{_base}/{id}", token, ct);
 
-        /// <summary>
-        /// Обновить ценовую информацию товара.
-        /// </summary>
-        /// <param name="id">Идентификатор товара.</param>
-        /// <param name="dto">Модель обновления цен (<see cref="ProductPricingUpdateDTO"/>).</param>
-        /// <returns>Асинхронная задача.</returns>
-        public async Task UpdateProductPricingAsync(int id, ProductPricingUpdateDTO dto)
-            => await WebClient.PutAsync<object?>($"{_base}/{id}/pricing", dto);
+        public Task<ProductDTO?> CreateProductAsync(ProductCreateDTO dto, string token, CancellationToken ct = default)
+            => _client.PostAsync<ProductDTO>(_base, dto, token, ct);
 
-        /// <summary>
-        /// Обновить связи товара с другими сущностями (категории, теги, сопутствующие товары и т.д.).
-        /// </summary>
-        /// <param name="id">Идентификатор товара.</param>
-        /// <param name="dto">Модель для обновления связей (<see cref="ProductRelationsUpdateDTO"/>).</param>
-        /// <returns>Асинхронная задача.</returns>
-        public async Task UpdateProductRelationsAsync(int id, ProductRelationsUpdateDTO dto)
-            => await WebClient.PutAsync<object?>($"{_base}/{id}/relations", dto);
+        public Task UpdateProductAsync(int id, ProductUpdateDTO dto, string token, CancellationToken ct = default)
+            => _client.PutAsync<object?>($"{_base}/{id}", dto, token, ct);
 
-        /// <summary>
-        /// Удалить товар по идентификатору.
-        /// </summary>
-        /// <param name="id">Идентификатор удаляемого товара.</param>
-        /// <returns>Асинхронная задача.</returns>
-        public async Task DeleteProductAsync(int id)
-            => await WebClient.DeleteAsync<object?>($"{_base}/{id}");
+        public Task UpdateProductPricingAsync(int id, ProductPricingUpdateDTO dto, string token, CancellationToken ct = default)
+            => _client.PutAsync<object?>($"{_base}/{id}/pricing", dto, token, ct);
 
-        /// <summary>
-        /// Получить общее количество товаров в системе.
-        /// </summary>
-        /// <returns>Количество товаров (целое число).</returns>
-        public async Task<int> GetProductsCountAsync()
-            => await WebClient.GetAsync<int>($"{_base}/count");
+        public Task UpdateProductRelationsAsync(int id, ProductRelationsUpdateDTO dto, string token, CancellationToken ct = default)
+            => _client.PutAsync<object?>($"{_base}/{id}/relations", dto, token, ct);
+
+        public Task DeleteProductAsync(int id, string token, CancellationToken ct = default)
+            => _client.DeleteAsync<object?>($"{_base}/{id}", token, ct);
+
+        public Task<int> GetProductsCountAsync(string token, CancellationToken ct = default)
+            => _client.GetAsync<int>($"{_base}/count", token, ct);
     }
 }

@@ -3,6 +3,7 @@ using API.requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.users.interfaces;
+using Shared.requests;
 
 namespace API.controllers.users
 {
@@ -19,10 +20,12 @@ namespace API.controllers.users
 
         [HttpGet("{id}/orders")]
         [Authorize(Roles = "Клиент,Менеджер,Администратор")]
-        public async Task<IActionResult> GetUserOrdersByUserId([FromRoute] ByIdRequest req)
+        public async Task<IActionResult> GetUserOrdersByUserId(
+            [FromRoute] ByIdRequest req,
+            [FromQuery] GetOrdersListRequest query)
             => await RequestExecutor.Execute(async () =>
             {
-                var data = await _userOrdersSvc.GetUserOrdersByUserIdAsync(req.Id);
+                var data = await _userOrdersSvc.GetUserOrdersByUserIdAsync(req.Id, query);
 
                 return ResponseBuilder.BuildOk(data);
             }, ModelState);
@@ -43,6 +46,16 @@ namespace API.controllers.users
             => await RequestExecutor.Execute(async () =>
             {
                 var data = await _userOrdersSvc.CreateOrderByUserId(req.Id);
+
+                return ResponseBuilder.BuildOk(data);
+            }, ModelState);
+
+        [HttpGet("{id}/cart")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
+        public async Task<IActionResult> GetCartOrderByUserId([FromRoute] ByIdRequest req)
+            => await RequestExecutor.Execute(async () =>
+            {
+                var data = await _userOrdersSvc.GetCartOrderByUserIdAsync(req.Id);
 
                 return ResponseBuilder.BuildOk(data);
             }, ModelState);

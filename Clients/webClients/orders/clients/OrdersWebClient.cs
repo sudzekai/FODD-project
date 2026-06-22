@@ -7,67 +7,37 @@ namespace Clients.webClients.orders.clients
 {
     /// <summary>
     /// Клиент для работы с API заказов.
-    /// Обёртка над общим `WebClient`, формирующая URL-ы для эндпоинтов, связанных с сущностью заказа.
     /// </summary>
     public class OrdersWebClient : IOrdersWebClient
     {
         private const string _base = "/orders";
 
-        /// <summary>
-        /// Получить список заказов с параметрами фильтрации/пагинации.
-        /// </summary>
-        /// <param name="req">Параметры запроса списка (фильтры, страница, размер страницы и т.п.).</param>
-        /// <returns>Список DTO заказов, соответствующих условиям запроса.</returns>
-        /// <exception cref="System.Net.Http.HttpRequestException">В случае ошибки HTTP-запроса к API.</exception>
-        public async Task<List<OrderDTO>> GetOrdersAsync(GetListRequest req)
-            => await WebClient.GetAsync<List<OrderDTO>>(
-                $"{_base}{QueryBuilder.ToQueryString(req)}"
-            );
+        private readonly IWebClient _client;
 
-        /// <summary>
-        /// Получить детали заказа по идентификатору.
-        /// </summary>
-        /// <param name="id">Идентификатор заказа.</param>
-        /// <returns>Объект <see cref="OrderDTO"/> с подробной информацией о заказе.</returns>
-        /// <exception cref="System.Net.Http.HttpRequestException">В случае ошибки HTTP-запроса к API.</exception>
-        public async Task<OrderDTO> GetOrderByIdAsync(int id)
-            => await WebClient.GetAsync<OrderDTO>($"{_base}/{id}");
+        public OrdersWebClient(IWebClient client)
+        {
+            _client = client;
+        }
 
-        /// <summary>
-        /// Обновить статус заказа.
-        /// </summary>
-        /// <param name="id">Идентификатор заказа для обновления.</param>
-        /// <param name="dto">DTO с данными для обновления статуса.</param>
-        /// <returns>Асинхронная задача. Результат не возвращается.</returns>
-        /// <exception cref="System.Net.Http.HttpRequestException">В случае ошибки HTTP-запроса к API.</exception>
-        public async Task UpdateOrderStatusAsync(int id, OrderStatusUpdateDTO dto)
-            => await WebClient.PutAsync<object?>($"{_base}/{id}/status", dto);
+        public Task<List<OrderDTO>> GetOrdersAsync(GetOrdersListRequest req, string token, CancellationToken ct = default)
+            => _client.GetAsync<List<OrderDTO>>(
+                $"{_base}{QueryBuilder.ToQueryString(req)}",
+                token,
+                ct) ?? Task.FromResult(new List<OrderDTO>());
 
-        /// <summary>
-        /// Обновить информацию о доставке заказа.
-        /// </summary>
-        /// <param name="id">Идентификатор заказа для обновления.</param>
-        /// <param name="dto">DTO с данными доставки (адрес, дата, служба и т.п.).</param>
-        /// <returns>Асинхронная задача. Результат не возвращается.</returns>
-        /// <exception cref="System.Net.Http.HttpRequestException">В случае ошибки HTTP-запроса к API.</exception>
-        public async Task UpdateOrderDeliveryAsync(int id, OrderDeliveryUpdateDTO dto)
-            => await WebClient.PutAsync<object?>($"{_base}/{id}/delivery", dto);
+        public Task<OrderDTO> GetOrderByIdAsync(int id, string token, CancellationToken ct = default)
+            => _client.GetAsync<OrderDTO>($"{_base}/{id}", token, ct);
 
-        /// <summary>
-        /// Удалить заказ по идентификатору.
-        /// </summary>
-        /// <param name="id">Идентификатор удаляемого заказа.</param>
-        /// <returns>Асинхронная задача. Результат не возвращается.</returns>
-        /// <exception cref="System.Net.Http.HttpRequestException">В случае ошибки HTTP-запроса к API.</exception>
-        public async Task DeleteOrderAsync(int id)
-            => await WebClient.DeleteAsync<object?>($"{_base}/{id}");
+        public Task UpdateOrderStatusAsync(int id, OrderStatusUpdateDTO dto, string token, CancellationToken ct = default)
+            => _client.PutAsync<object?>($"{_base}/{id}/status", dto, token, ct);
 
-        /// <summary>
-        /// Получить общее количество заказов.
-        /// </summary>
-        /// <returns>Количество заказов (целое число).</returns>
-        /// <exception cref="System.Net.Http.HttpRequestException">В случае ошибки HTTP-запроса к API.</exception>
-        public async Task<int> GetOrdersCountAsync()
-            => await WebClient.GetAsync<int>($"{_base}/count");
+        public Task UpdateOrderDeliveryAsync(int id, OrderDeliveryUpdateDTO dto, string token, CancellationToken ct = default)
+            => _client.PutAsync<object?>($"{_base}/{id}/delivery", dto, token, ct);
+
+        public Task DeleteOrderAsync(int id, string token, CancellationToken ct = default)
+            => _client.DeleteAsync<object?>($"{_base}/{id}", token, ct);
+
+        public Task<int> GetOrdersCountAsync(string token, CancellationToken ct = default)
+            => _client.GetAsync<int>($"{_base}/count", token, ct);
     }
 }

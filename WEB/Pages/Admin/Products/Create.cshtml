@@ -1,0 +1,123 @@
+﻿@page "/admin/products/create"
+@model WEB.Pages.Admin.Products.CreateModel
+
+@{
+    ViewData["Title"] = "Создание товара";
+}
+
+<div class="bg-white p-2 shadow rounded-4 mb-2">
+    <h2 class="fw-semibold m-0">
+        Создание товара
+    </h2>
+</div>
+
+<div class="bg-white p-3 shadow rounded-4">
+
+    <form method="post" class="d-flex flex-column gap-3">
+
+        <div class="row g-2">
+
+            <div class="col-6">
+                <label class="form-label">Название</label>
+                <input asp-for="Product.Name" class="form-control rounded-4" />
+            </div>
+
+            <div class="col-6">
+                <label class="form-label">Цена</label>
+                <input asp-for="Product.Price" class="form-control rounded-4" />
+            </div>
+
+            <div class="col-4">
+                <label class="form-label">Скидка</label>
+                <input asp-for="Product.Discount" class="form-control rounded-4" />
+            </div>
+
+            <div class="col-4">
+                <label class="form-label">Единица</label>
+                <input asp-for="Product.Unit" class="form-control rounded-4" />
+            </div>
+
+            <div class="col-4">
+                <label class="form-label">Количество</label>
+                <input asp-for="Product.Quantity" class="form-control rounded-4" />
+            </div>
+
+            <div class="col-4">
+                <label class="form-label">Размер</label>
+                <input asp-for="Product.Size" class="form-control rounded-4" />
+            </div>
+
+            <div class="col-4">
+                <label class="form-label">Цвет</label>
+                <input asp-for="Product.Color" class="form-control rounded-4" />
+            </div>
+
+            <div class="col-4">
+                <label class="form-label">Описание</label>
+                <input asp-for="Product.Description" class="form-control rounded-4" />
+            </div>
+
+        </div>
+
+        <hr />
+
+        <div class="row g-2">
+
+            <div class="col-4">
+                <label class="form-label">Категория</label>
+                <select asp-for="Product.CategoryId"
+                        asp-items="Model.Categories"
+                        class="form-select rounded-4"></select>
+            </div>
+
+            <div class="col-4">
+                <label class="form-label">Производитель</label>
+                <select asp-for="Product.ManufacturerId"
+                        asp-items="Model.Manufacturers"
+                        class="form-select rounded-4"></select>
+            </div>
+
+            <div class="col-4">
+                <label class="form-label">Поставщик</label>
+                <select asp-for="Product.SupplierId"
+                        asp-items="Model.Suppliers"
+                        class="form-select rounded-4"></select>
+            </div>
+
+        </div>
+
+        <hr />
+
+        <div class="row g-2">
+
+            <div class="col-12">
+                <label class="form-label">Теги</label>
+
+                <select asp-for="SelectedTags"
+                        asp-items="Model.TagsSelectList"
+                        class="form-select rounded-4"
+                        multiple>
+                </select>
+            </div>
+
+        </div>
+
+        <hr />
+
+        <div class="d-flex gap-2">
+
+            <button type="submit"
+                    class="btn btn-primary rounded-4">
+                Создать
+            </button>
+
+            <a href="/admin/products"
+               class="btn btn-outline-dark rounded-4">
+                Назад
+            </a>
+
+        </div>
+
+    </form>
+
+</div>

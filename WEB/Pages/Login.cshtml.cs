@@ -1,4 +1,3 @@
-using Clients.webClients;
 using Clients.webClients.auth.interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -11,40 +10,42 @@ namespace WEB.Pages
 {
     public class LoginModel : PageModel
     {
-        private readonly IAuthWebClient _webClient;
+        private readonly IAuthWebClient _authClient;
 
-        public LoginModel(IAuthWebClient webClient)
+        public LoginModel(IAuthWebClient authClient)
         {
-            _webClient = webClient;
+            _authClient = authClient;
         }
 
         [BindProperty]
         public AuthRequest AuthRequest { get; set; } = new();
 
-        public void OnGet()
-        {
-
-        }
+        public void OnGet() { }
 
         public async Task<IActionResult> OnPost()
         {
+            if (!ModelState.IsValid)
+                return Page();
+
             try
             {
-                var response = await _webClient.LoginAsync(AuthRequest);
+                var response = await _authClient.LoginAsync(AuthRequest);
 
                 var claims = new List<Claim>
                 {
+                    new Claim(ClaimTypes.NameIdentifier, response.UserId.ToString()),
                     new Claim(ClaimTypes.Name, response.FullName),
                     new Claim(ClaimTypes.Role, response.Role),
+                    new Claim("Token", response.Token),
                 };
+
                 var identity = new ClaimsIdentity(claims, "Cookies");
                 var principal = new ClaimsPrincipal(identity);
 
                 await HttpContext.SignInAsync("Cookies", principal);
 
-                WebClient.AddBearerToken(response.Token);
-
                 return Redirect("/products");
+
             }
             catch (ApiException ex)
             {

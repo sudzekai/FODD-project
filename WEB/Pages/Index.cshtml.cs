@@ -8,29 +8,9 @@ namespace WEB.Pages
 {
     public class IndexModel : PageModel
     {
-        public List<UserSimpleDTO> Users { get; set; } = [];
-
-        [BindProperty(SupportsGet = true)]
-        public string? Search { get; set; }
-
-
-        private readonly IUsersWebClient _webClient;
-
-        public IndexModel(IUsersWebClient webClient)
+        public async Task<IActionResult> OnGetAsync(string? search)
         {
-            _webClient = webClient;
-        }
-
-        public async Task OnGetAsync(string? search)
-        {
-            Search = search;
-
-            var req = new GetListRequest
-            {
-                SearchTerm = search ?? ""
-            };
-
-            Users = await _webClient.GetUsersAsync(req);
+            return Redirect("/products");
         }
     }
 }

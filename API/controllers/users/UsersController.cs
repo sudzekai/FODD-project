@@ -32,7 +32,7 @@ namespace API.controllers.users
             }, ModelState);
 
         [HttpGet(template: "{id}", Name = "GetUserById")]
-        [Authorize(Roles = "Менеджер,Администратор")]
+        [Authorize(Roles = "Клиент,Менеджер,Администратор")]
         public async Task<IActionResult> GetUserById([FromRoute] ByIdRequest req)
             => await RequestExecutor.Execute(async () =>
             {

@@ -6,61 +6,38 @@ using Shared.requests;
 namespace Clients.webClients.manufacturers.clients
 {
     /// <summary>
-    /// Веб‑клиент для работы с API производителей.
-    /// Инкапсулирует HTTP-вызовы к маршруту <c>/manufacturers</c>.
+    /// Клиент для работы с API производителей.
     /// </summary>
     public class ManufacturersWebClient : IManufacturersWebClient
     {
         private const string _base = "/manufacturers";
 
-        /// <summary>
-        /// Получить список производителей с параметрами фильтрации/страничности.
-        /// </summary>
-        /// <param name="req">Параметры запроса списка (фильтры, сортировка, постраничность).</param>
-        /// <returns>Список DTO производителей, соответствующих запросу.</returns>
-        public async Task<List<ManufacturerDTO>> GetManufacturersAsync(GetListRequest req)
-            => await WebClient.GetAsync<List<ManufacturerDTO>>(
-                $"{_base}{QueryBuilder.ToQueryString(req)}"
-            );
+        private readonly IWebClient _client;
 
-        /// <summary>
-        /// Получить производителя по идентификатору.
-        /// </summary>
-        /// <param name="id">Идентификатор производителя.</param>
-        /// <returns>DTO производителя с указанным идентификатором.</returns>
-        public async Task<ManufacturerDTO> GetManufacturerByIdAsync(int id)
-            => await WebClient.GetAsync<ManufacturerDTO>($"{_base}/{id}");
+        public ManufacturersWebClient(IWebClient client)
+        {
+            _client = client;
+        }
 
-        /// <summary>
-        /// Создать нового производителя.
-        /// </summary>
-        /// <param name="dto">Данные для создания производителя.</param>
-        /// <returns>DTO созданного производителя (включая присвоенный идентификатор и прочие заполненные поля).</returns>
-        public async Task<ManufacturerDTO> CreateManufacturerAsync(ManufacturerWriteDTO dto)
-            => await WebClient.PostAsync<ManufacturerDTO>(_base, dto);
+        public Task<List<ManufacturerDTO>> GetManufacturersAsync(GetListRequest req, string token, CancellationToken ct = default)
+            => _client.GetAsync<List<ManufacturerDTO>>(
+                $"{_base}{QueryBuilder.ToQueryString(req)}",
+                token,
+                ct) ?? Task.FromResult(new List<ManufacturerDTO>());
 
-        /// <summary>
-        /// Обновить существующего производителя.
-        /// </summary>
-        /// <param name="id">Идентификатор производителя для обновления.</param>
-        /// <param name="dto">Данные для обновления производителя.</param>
-        /// <returns>Задача, представляющая асинхронную операцию обновления.</returns>
-        public async Task UpdateManufacturerAsync(int id, ManufacturerWriteDTO dto)
-            => await WebClient.PutAsync<object?>($"{_base}/{id}", dto);
+        public Task<ManufacturerDTO> GetManufacturerByIdAsync(int id, string token, CancellationToken ct = default)
+            => _client.GetAsync<ManufacturerDTO>($"{_base}/{id}", token, ct);
 
-        /// <summary>
-        /// Удалить производителя по идентификатору.
-        /// </summary>
-        /// <param name="id">Идентификатор производителя для удаления.</param>
-        /// <returns>Задача, представляющая асинхронную операцию удаления.</returns>
-        public async Task DeleteManufacturerAsync(int id)
-            => await WebClient.DeleteAsync<object?>($"{_base}/{id}");
+        public Task<ManufacturerDTO> CreateManufacturerAsync(ManufacturerWriteDTO dto, string token, CancellationToken ct = default)
+            => _client.PostAsync<ManufacturerDTO>(_base, dto, token, ct);
 
-        /// <summary>
-        /// Получить общее количество производителей.
-        /// </summary>
-        /// <returns>Общее количество записей производителей в системе.</returns>
-        public async Task<int> GetManufacturersCountAsync()
-            => await WebClient.GetAsync<int>($"{_base}/count");
+        public Task UpdateManufacturerAsync(int id, ManufacturerWriteDTO dto, string token, CancellationToken ct = default)
+            => _client.PutAsync<object?>($"{_base}/{id}", dto, token, ct);
+
+        public Task DeleteManufacturerAsync(int id, string token, CancellationToken ct = default)
+            => _client.DeleteAsync<object?>($"{_base}/{id}", token, ct);
+
+        public Task<int> GetManufacturersCountAsync(string token, CancellationToken ct = default)
+            => _client.GetAsync<int>($"{_base}/count", token, ct);
     }
 }

@@ -1,0 +1,56 @@
+﻿@page "/cart"
+@model WEB.Pages.Orders.CartModel
+@{
+    ViewData["Title"] = "Корзина";
+}
+
+<div class="bg-white p-2 shadow rounded-4">
+    <h2 class="fw-semibold">Корзина</h2>
+</div>
+
+<div class="mt-2">
+
+    @if (Model.Cart == null || Model.Cart.ProductIds == null || !Model.Cart.ProductIds.Any())
+    {
+        <div class="bg-white p-4 rounded-4 shadow text-center text-muted">
+            Корзина пуста
+        </div>
+    }
+    else
+    {
+        <div class="bg-white p-3 rounded-4 shadow d-flex flex-column gap-2">
+
+            <div>
+                <span class="fw-semibold">Заказ:</span> #@Model.Cart.Id
+            </div>
+
+            <div>
+                <span class="fw-semibold">Создан:</span>
+                @Model.Cart.CreationDateTime.ToString("g")
+            </div>
+
+            <div>
+                <span class="fw-semibold">Статус:</span>
+                @Model.StatusName
+            </div>
+
+            <div>
+                <span class="fw-semibold">Товаров:</span>
+                @Model.Cart.ProductIds.Count
+            </div>
+
+            <hr />
+
+            <div class="fw-semibold">ID товаров:</div>
+
+            <div class="d-flex flex-wrap gap-1">
+                @foreach (var id in Model.Cart.ProductIds)
+                {
+                    <span class="badge bg-secondary">@id</span>
+                }
+            </div>
+
+        </div>
+    }
+
+</div>

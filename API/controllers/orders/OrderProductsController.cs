@@ -2,7 +2,7 @@
 using API.requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Services.orders.services;
+using Services.orders.interfaces;
 using Shared.dtos.orders;
 using System.ComponentModel.DataAnnotations;
 
@@ -46,39 +46,39 @@ namespace API.controllers.orders
                  return ResponseBuilder.BuildOk(data);
              }, ModelState);
 
-        [HttpPost("{id}/products/add")]
+        [HttpPost("user/{id}/products/add")]
         [Authorize(Roles = "Клиент,Менеджер,Администратор")]
-        public async Task<IActionResult> AddOrderProductByOrderId(
+        public async Task<IActionResult> AddOrderProductByUserId(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Товар обязателен")]
             [FromBody] OrderProductUpdateDTO dto)
              => await RequestExecutor.Execute(async () =>
              {
-                 await _svc.AddOrderProductByOrderIdAsync(req.Id, dto);
+                 await _svc.AddOrderProductByUserIdAsync(req.Id, dto);
                  return ResponseBuilder.BuildOk<object?>(null);
              }, ModelState);
 
-        [HttpPost("{id}/products/remove")]
+        [HttpPost("user/{id}/products/remove")]
         [Authorize(Roles = "Клиент,Менеджер,Администратор")]
-        public async Task<IActionResult> RemoveOrderProductByOrderIdAsync(
+        public async Task<IActionResult> RemoveOrderProductByUserIdAsync(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Товар обязателен")]
             [FromBody] OrderProductUpdateDTO dto)
              => await RequestExecutor.Execute(async () =>
              {
-                 await _svc.RemoveOrderProductByOrderIdAsync(req.Id, dto);
+                 await _svc.RemoveOrderProductByUserIdAsync(req.Id, dto);
                  return ResponseBuilder.BuildOk<object?>(null);
              }, ModelState);
 
-        [HttpPost("{id}/products/delete")]
+        [HttpPost("user/{id}/products/delete")]
         [Authorize(Roles = "Клиент,Менеджер,Администратор")]
-        public async Task<IActionResult> DeleteOrderProductByOrderId(
+        public async Task<IActionResult> DeleteOrderProductByUserId(
             [FromRoute] ByIdRequest req,
             [Required(ErrorMessage = "Товар обязателен")]
             [FromBody] OrderProductUpdateDTO dto)
              => await RequestExecutor.Execute(async () =>
              {
-                 await _svc.DeleteOrderProductByOrderIdAsync(req.Id, dto);
+                 await _svc.DeleteOrderProductByUserIdAsync(req.Id, dto);
                  return ResponseBuilder.BuildOk<object?>(null);
              }, ModelState);
     }

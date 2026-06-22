@@ -20,7 +20,7 @@ namespace Services.orders.services
             _uow = uow;
         }
 
-        public async Task<List<OrderSimpleDTO>> GetOrdersAsync(GetListRequest req)
+        public async Task<List<OrderSimpleDTO>> GetOrdersAsync(GetOrdersListRequest req)
         {
             var query = _orders.AsQueryable();
 
@@ -33,12 +33,53 @@ namespace Services.orders.services
                     );
             }
 
-            query = req.OrderDirection switch
+            if (req.OrderDirection == "asc")
             {
-                "asc" => query.OrderBy(p => p.Id),
-                _ => query.OrderByDescending(u => u.Id)
+                if (req.OrderBy == "creationDate")
+                    query = query.OrderBy(p => p.CreationDateTime);
+                else if (req.OrderBy == "deliveryDate")
+                    query = query.OrderBy(p => p.DeliveryDate);
+                else
+                    query = query.OrderBy(p => p.Id);
+            }
+            else
+            {
+                if (req.OrderBy == "creationDate")
+                    query = query.OrderByDescending(p => p.CreationDateTime);
+                else if (req.OrderBy == "deliveryDate")
+                    query = query.OrderByDescending(p => p.DeliveryDate);
+                else
+                    query = query.OrderByDescending(p => p.Id);
+            }
 
-            };
+            if (req.StatusId != 0)
+                query = query.Where(p => p.StatusId == req.StatusId);
+
+            if (req.DeliveryDateTimeStart is not null)
+            {
+                query = query.Where(p =>
+                    p.DeliveryDate.HasValue &&
+                    p.DeliveryDate.Value >= req.DeliveryDateTimeStart);
+            }
+
+            if (req.DeliveryDateTimeEnd is not null)
+            {
+                query = query.Where(p =>
+                    p.DeliveryDate.HasValue &&
+                    p.DeliveryDate.Value <= req.DeliveryDateTimeEnd);
+            }
+
+            if (req.CreationDateTimeStart is not null)
+            {
+                query = query.Where(p =>
+                    p.CreationDateTime >= req.CreationDateTimeStart);
+            }
+
+            if (req.CreationDateTimeEnd is not null)
+            {
+                query = query.Where(p =>
+                    p.CreationDateTime <= req.CreationDateTimeEnd);
+            }
 
             query = query.Skip(req.Offset)
                          .Take(req.Limit);

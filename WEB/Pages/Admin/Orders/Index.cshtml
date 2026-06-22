@@ -1,0 +1,133 @@
+﻿@page
+@model WEB.Pages.Admin.Orders.IndexModel
+
+@{
+    ViewData["Title"] = "Заказы";
+}
+
+<form method="get">
+
+    <div class="bg-white p-2 shadow rounded-4 mb-2 d-flex justify-content-between align-items-center">
+        <div class="d-flex w-100 gap-1 m-0">
+            <h2 class="m-0 fw-semibold me-3">Заказы</h2>
+
+            <input asp-for="GetRequest.SearchTerm"
+                   class="form-control rounded-4 w-100"
+                   placeholder="Поиск..." />
+
+            <button class="btn btn-primary rounded-4">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="bg-white p-2 shadow rounded-4 mb-2">
+        <div class="row g-2">
+
+            <div class="col-3">
+                <label class="form-label">Статус</label>
+                <select asp-for="GetRequest.StatusId"
+                        asp-items="Model.Statuses"
+                        class="form-select rounded-4">
+                    <option value="0">Все</option>
+                </select>
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">Сортировка</label>
+                <select asp-for="GetRequest.OrderDirection"
+                        class="form-select rounded-4">
+                    <option value="desc">По убыванию</option>
+                    <option value="asc">По возрастанию</option>
+                </select>
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">Дата создания (с)</label>
+                <input asp-for="GetRequest.CreationDateTimeStart"
+                       type="date"
+                       class="form-control rounded-4" />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">Дата создания (по)</label>
+                <input asp-for="GetRequest.CreationDateTimeEnd"
+                       type="date"
+                       class="form-control rounded-4" />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">Дата доставки (с)</label>
+                <input asp-for="GetRequest.DeliveryDateTimeStart"
+                       type="date"
+                       class="form-control rounded-4" />
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">Дата доставки (по)</label>
+                <input asp-for="GetRequest.DeliveryDateTimeEnd"
+                       type="date"
+                       class="form-control rounded-4" />
+            </div>
+
+            <div class="col-12 d-flex gap-2 mt-2">
+                <button class="btn btn-primary rounded-4">
+                    Применить фильтры
+                </button>
+
+                <a href="/admin/orders"
+                   class="btn btn-outline-dark rounded-4">
+                    Сбросить всё
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+<div class="bg-white p-2 shadow rounded-4 mb-2">
+
+    @if (Model.Orders == null || !Model.Orders.Any())
+    {
+        <div class="text-muted text-center py-4">
+            Заказы отсутствуют
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead>
+                    <tr class="text-muted">
+                        <th>ID</th>
+                        <th>Пользователь</th>
+                        <th>Дата создания</th>
+                        <th>Дата доставки</th>
+                        <th>Код получения</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.Orders)
+                    {
+                        <tr style="cursor:pointer"
+                            onclick="window.location.href='/admin/orders/@item.Id'">
+
+                            <td>@item.Id</td>
+                            <td>@item.UserId</td>
+                            <td>@item.CreationDateTime</td>
+                            <td>@item.DeliveryDate</td>
+                            <td>@item.ReceiptCode</td>
+                            <td>@item.StatusId</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    }
+</div>

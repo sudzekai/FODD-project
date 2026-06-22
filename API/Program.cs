@@ -3,8 +3,9 @@ using API.utilities;
 using DB.dbContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using Scalar.AspNetCore;
 using Services.auth.interfaces;
 using Services.auth.services;
 using Services.categories.interfaces;
@@ -43,11 +44,28 @@ namespace API
 
             builder.Services.AddDbContext<ShoesStoreDbContext>();
 
+
             AddServices(builder);
 
             AddControllesWithOptions(builder);
 
-            builder.Services.AddOpenApi();
+            builder.Services.AddOpenApi(options =>
+            {
+                options.AddDocumentTransformer((doc, ctx, ct) =>
+                {
+                    doc.Components ??= new OpenApiComponents();
+                    doc.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+
+                    doc.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
+                    {
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "bearer",
+                        BearerFormat = "JWT"
+                    };
+
+                    return Task.CompletedTask;
+                });
+            });
 
             builder.Services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -62,27 +80,31 @@ namespace API
 
                         ValidIssuer = builder.Configuration["Jwt:Issuer"],
                         ValidAudience = builder.Configuration["Jwt:Audience"],
+
                         IssuerSigningKey = new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
-                        )
+                        ),
+
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
 
             var app = builder.Build();
 
+            app.MapControllers();
+
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+
+                app.MapScalarApiReference(options =>
+                {
+                    options.WithTitle("API Documentation");
+                });
             }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.MapControllers();
 
             app.Run();
         }
@@ -140,7 +162,7 @@ namespace API
         {
             builder.Services.AddScoped<IRolesService, RolesService>();
         }
-        
+
         private static void AddStatusesServices(WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<IStatusesService, StatusesService>();
@@ -150,7 +172,7 @@ namespace API
         {
             builder.Services.AddScoped<ISuppliersService, SuppliersService>();
         }
-        
+
         private static void AddTagsServices(WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<ITagsService, TagsService>();

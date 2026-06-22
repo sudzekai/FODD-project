@@ -1,0 +1,52 @@
+﻿@page "/admin/manufacturers/{id:int}"
+@model WEB.Pages.Admin.Manufacturers.DetailsModel
+@{
+    ViewData["Title"] = "Производитель";
+}
+
+<div class="bg-white p-2 shadow rounded-4 mb-2">
+    <h2 class="fw-semibold m-0">
+        Производитель #@Model.Manufacturer.Id
+    </h2>
+</div>
+
+<div class="bg-white p-3 shadow rounded-4">
+
+    <form method="post" class="d-flex flex-column gap-2">
+
+        <input type="hidden" asp-for="Manufacturer.Id" />
+
+        <div>
+            <label class="form-label">Название</label>
+            <input asp-for="Manufacturer.Name"
+                   class="form-control rounded-4" />
+        </div>
+
+        <div class="text-muted">
+            ID: @Model.Manufacturer.Id
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <button type="submit"
+                    class="btn btn-primary rounded-4">
+                Сохранить
+            </button>
+
+            <div class="d-flex flex-grow-1">
+                <a href="/admin/manufacturers"
+                   class="btn btn-outline-dark rounded-4">
+                    Назад
+                </a>
+            </div>
+
+            <button type="submit"
+                    name="isDeleting"
+                    value="true"
+                    class="btn btn-danger rounded-4">
+                <i class="bi-trash"></i>
+                Удалить
+            </button>
+        </div>
+    </form>
+</div>

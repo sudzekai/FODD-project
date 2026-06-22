@@ -40,7 +40,7 @@ namespace Services.products.services
             var productEntry = await _products.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == productId)
                 ?? throw new NotFoundException("Товар с таким id не найден");
 
-            var tagEntry = await _tags.FirstOrDefaultAsync(p => p.Id == productId)
+            var tagEntry = await _tags.FirstOrDefaultAsync(p => p.Id == id)
                 ?? throw new NotFoundException("Тэг с таким id не найден");
 
             productEntry.Tags.Add(tagEntry);
@@ -60,7 +60,7 @@ namespace Services.products.services
             var productEntry = await _products.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == productId)
                 ?? throw new NotFoundException("Товар с таким id не найден");
 
-            var tagEntry = await _tags.FirstOrDefaultAsync(p => p.Id == productId)
+            var tagEntry = await _tags.FirstOrDefaultAsync(p => p.Id == id)
                 ?? throw new NotFoundException("Тэг с таким id не найден");
 
             productEntry.Tags.Remove(tagEntry);

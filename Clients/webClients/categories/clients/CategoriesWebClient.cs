@@ -6,61 +6,38 @@ using Shared.requests;
 namespace Clients.webClients.categories.clients
 {
     /// <summary>
-    /// Веб‑клиент для работы с API категорий.
-    /// Инкапсулирует HTTP-вызовы к маршруту <c>/categories</c>.
+    /// Клиент для работы с API категорий.
     /// </summary>
     public class CategoriesWebClient : ICategoriesWebClient
     {
         private const string _base = "/categories";
 
-        /// <summary>
-        /// Получить список категорий с параметрами фильтрации/страничности.
-        /// </summary>
-        /// <param name="req">Параметры запроса списка (фильтры, сортировка, постраничность).</param>
-        /// <returns>Список DTO категорий, соответствующих запросу.</returns>
-        public async Task<List<CategoryDTO>> GetCategoriesAsync(GetListRequest req)
-            => await WebClient.GetAsync<List<CategoryDTO>>(
-                $"{_base}{QueryBuilder.ToQueryString(req)}"
-            ) ?? [];
+        private readonly IWebClient _client;
 
-        /// <summary>
-        /// Получить категорию по идентификатору.
-        /// </summary>
-        /// <param name="id">Идентификатор категории.</param>
-        /// <returns>DTO категории с указанным идентификатором.</returns>
-        public async Task<CategoryDTO> GetCategoryByIdAsync(int id)
-            => await WebClient.GetAsync<CategoryDTO>($"{_base}/{id}");
+        public CategoriesWebClient(IWebClient client)
+        {
+            _client = client;
+        }
 
-        /// <summary>
-        /// Создать новую категорию.
-        /// </summary>
-        /// <param name="dto">Данные для создания категории.</param>
-        /// <returns>DTO созданной категории (включая присвоенный идентификатор и прочие заполненные поля).</returns>
-        public async Task<CategoryDTO> CreateCategoryAsync(CategoryWriteDTO dto)
-            => await WebClient.PostAsync<CategoryDTO>(_base, dto);
+        public Task<List<CategoryDTO>> GetCategoriesAsync(GetListRequest req, string token, CancellationToken ct = default)
+            => _client.GetAsync<List<CategoryDTO>>(
+                $"{_base}{QueryBuilder.ToQueryString(req)}",
+                token,
+                ct) ?? Task.FromResult(new List<CategoryDTO>());
 
-        /// <summary>
-        /// Обновить существующую категорию.
-        /// </summary>
-        /// <param name="id">Идентификатор категории для обновления.</param>
-        /// <param name="dto">Данные для обновления категории.</param>
-        /// <returns>Задача, представляющая асинхронную операцию обновления.</returns>
-        public async Task UpdateCategoryAsync(int id, CategoryWriteDTO dto)
-            => await WebClient.PutAsync<object?>($"{_base}/{id}", dto);
+        public Task<CategoryDTO> GetCategoryByIdAsync(int id, string token, CancellationToken ct = default)
+            => _client.GetAsync<CategoryDTO>($"{_base}/{id}", token, ct);
 
-        /// <summary>
-        /// Удалить категорию по идентификатору.
-        /// </summary>
-        /// <param name="id">Идентификатор категории для удаления.</param>
-        /// <returns>Задача, представляющая асинхронную операцию удаления.</returns>
-        public async Task DeleteCategoryAsync(int id)
-            => await WebClient.DeleteAsync<object?>($"{_base}/{id}");
+        public Task<CategoryDTO> CreateCategoryAsync(CategoryWriteDTO dto, string token, CancellationToken ct = default)
+            => _client.PostAsync<CategoryDTO>(_base, dto, token, ct);
 
-        /// <summary>
-        /// Получить общее количество категорий.
-        /// </summary>
-        /// <returns>Общее количество записей категорий в системе.</returns>
-        public async Task<int> GetCategoriesCountAsync()
-            => await WebClient.GetAsync<int>($"{_base}/count");
+        public Task UpdateCategoryAsync(int id, CategoryWriteDTO dto, string token, CancellationToken ct = default)
+            => _client.PutAsync<object?>($"{_base}/{id}", dto, token, ct);
+
+        public Task DeleteCategoryAsync(int id, string token, CancellationToken ct = default)
+            => _client.DeleteAsync<object?>($"{_base}/{id}", token, ct);
+
+        public Task<int> GetCategoriesCountAsync(string token, CancellationToken ct = default)
+            => _client.GetAsync<int>($"{_base}/count", token, ct);
     }
 }

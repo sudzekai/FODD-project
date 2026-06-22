@@ -5,13 +5,13 @@ namespace Clients.webClients.products.interfaces
 {
     public interface IProductsWebClient
     {
-        Task<ProductDTO?> CreateProductAsync(ProductCreateDTO dto);
-        Task DeleteProductAsync(int id);
-        Task<ProductDTO> GetProductByIdAsync(int id);
-        Task<List<ProductSimpleDTO>> GetProductsAsync(GetProductsListRequest req);
-        Task<int> GetProductsCountAsync();
-        Task UpdateProductAsync(int id, ProductUpdateDTO dto);
-        Task UpdateProductPricingAsync(int id, ProductPricingUpdateDTO dto);
-        Task UpdateProductRelationsAsync(int id, ProductRelationsUpdateDTO dto);
+        Task<ProductDTO?> CreateProductAsync(ProductCreateDTO dto, string token, CancellationToken ct = default);
+        Task DeleteProductAsync(int id, string token, CancellationToken ct = default);
+        Task<ProductDTO> GetProductByIdAsync(int id, string token, CancellationToken ct = default);
+        Task<List<ProductSimpleDTO>> GetProductsAsync(GetProductsListRequest req, string token, CancellationToken ct = default);
+        Task<int> GetProductsCountAsync(string token, CancellationToken ct = default);
+        Task UpdateProductAsync(int id, ProductUpdateDTO dto, string token, CancellationToken ct = default);
+        Task UpdateProductPricingAsync(int id, ProductPricingUpdateDTO dto, string token, CancellationToken ct = default);
+        Task UpdateProductRelationsAsync(int id, ProductRelationsUpdateDTO dto, string token, CancellationToken ct = default);
     }
 }

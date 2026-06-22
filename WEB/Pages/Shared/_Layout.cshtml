@@ -23,27 +23,46 @@
                 <div class="vr"></div>
 
                 <a class="text-decoration-none text-dark btn-light d-flex align-items-center fs-5"
-                   asp-page="/Products/Index">
+                   href="/products">
                     <i class="bi bi-bag me-2 fs-4"></i>
                     Товары
                 </a>
 
-                <a class="text-decoration-none text-dark btn-light d-flex align-items-center fs-5">
+                <a class="text-decoration-none text-dark btn-light d-flex align-items-center fs-5"
+                    href="/cart">
                     <i class="bi bi-basket me-2 fs-4"></i>
                     Корзина
                 </a>
 
                 <a class="text-decoration-none text-dark btn-light d-flex align-items-center fs-5"
-                   asp-page="/Products/Create">
-                    <i class="bi bi-basket me-2 fs-4"></i>
-                    Создать товар
+                    href="/orders">
+                    <i class="bi bi-box-seam me-2 fs-4"></i>
+                    Мои заказы
                 </a>
+
+                @if (Model.HttpContext.User.FindFirst(ClaimTypes.Role)?.Value is var role && !string.IsNullOrWhiteSpace(role) && role != "Клиент")
+                {
+                    <div class="vr"></div>
+                    <a class="text-decoration-none text-dark btn-light d-flex align-items-center fs-5"
+                       href="/admin">
+                        <i class="bi bi-tools me-2 fs-4"></i>
+                        Инструменты
+                    </a>
+                }
             </div>
             <div class="d-flex flex-grow-0">
-                <a class="btn btn-sm btn-primary d-flex align-items-center rounded-4 fs-5 px-3 py-0 fw">
+                <a class="btn btn-sm btn-primary d-flex align-items-center rounded-4 fs-5 px-3 py-0 fw"
+                href="/profile">
                     <i class="bi bi-person me-1 fs-4"></i>
-                    Профиль
-                </a>
+                    @if (Model.HttpContext.User.FindFirst(ClaimTypes.Name)?.Value is var fullName && !string.IsNullOrWhiteSpace(fullName))
+                    {
+                        <label>@fullName</label>
+                    }
+                    else
+                    {
+                        <label>Войти</label>
+                    }
+                    </a>
             </div>
         </div>
     </div>
@@ -75,7 +94,6 @@
                                     class="btn-close position-absolute top-0 end-0 m-2"
                                     onclick="document.getElementById('errorOverlay').remove()">
                             </button>
-
                         </div>
 
                     </div>

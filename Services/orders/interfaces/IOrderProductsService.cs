@@ -1,14 +1,14 @@
 ﻿using Shared.dtos.orders;
 
-namespace Services.orders.services
+namespace Services.orders.interfaces
 {
     public interface IOrderProductsService
     {
-        Task AddOrderProductByOrderIdAsync(int orderId, OrderProductUpdateDTO dto);
-        Task DeleteOrderProductByOrderIdAsync(int orderId, OrderProductUpdateDTO dto);
+        Task AddOrderProductByUserIdAsync(int userId, OrderProductUpdateDTO dto);
+        Task DeleteOrderProductByUserIdAsync(int userId, OrderProductUpdateDTO dto);
         Task<List<OrderProductDTO>> GetOrderProductsByOrderIdAsync(int orderId);
         Task<int> GetOrderProductsCountByOrderIdAsync(int id);
         Task<int> GetOrderProductsSumCountByOrderIdAsync(int id);
-        Task RemoveOrderProductByOrderIdAsync(int orderId, OrderProductUpdateDTO dto);
+        Task RemoveOrderProductByUserIdAsync(int userId, OrderProductUpdateDTO dto);
     }
 }

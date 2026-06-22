@@ -1,0 +1,47 @@
+﻿@page "/profile"
+@model WEB.Pages.ProfileModel
+
+<div class="row g-2">
+
+    <div class="col-4">
+        <div class="bg-white rounded-4 shadow p-3 d-flex flex-column gap-2">
+
+            <div class="d-flex flex-column">
+                <label class="text-muted fs-6">ФИО</label>
+                <label class="fw-semibold fs-4">@Model.UserData?.FullName</label>
+            </div>
+
+            <hr class="my-1" />
+
+            <div class="d-flex flex-column">
+                <label class="text-muted fs-6">Логин</label>
+                <label class="fs-5">@Model.UserData?.Login</label>
+            </div>
+
+            <form method="post" asp-page-handler="Logout">
+                <button type="submit" class="btn btn-danger rounded-4 w-100 mt-2">
+                    Выйти из аккаунта
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="col-8">
+        <div class="bg-white rounded-4 shadow p-3">
+            <label class="fw-semibold fs-4">Профиль пользователя</label>
+
+            <hr />
+
+            <div class="row">
+                <label class="col-3">ФИО:</label>
+                <label class="col-8">@Model.UserData?.FullName</label>
+            </div>
+
+            <div class="row">
+                <label class="col-3">Логин:</label>
+                <label class="col-8">@Model.UserData?.Login</label>
+            </div>
+        </div>
+    </div>
+</div>

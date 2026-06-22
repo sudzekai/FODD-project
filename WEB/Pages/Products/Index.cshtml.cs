@@ -12,53 +12,62 @@ namespace WEB.Pages.Products
 {
     public class IndexModel : PageModel
     {
-        private readonly IProductsWebClient _webClient;
-
-        private readonly ICategoriesWebClient _categoriesWebClient;
-        private readonly ISuppliersWebClient _suppliersWebClient;
-        private readonly IManufacturersWebClient _manufacturersWebClient;
+        private string? Token => HttpContext.User.FindFirst("Token")?.Value;
 
 
-        public IndexModel(IProductsWebClient webClient, ISuppliersWebClient suppliersWebClient, IManufacturersWebClient manufacturersWebClient, ICategoriesWebClient categoriesWebClient)
+        private readonly IProductsWebClient _products;
+        private readonly ICategoriesWebClient _categories;
+        private readonly ISuppliersWebClient _suppliers;
+        private readonly IManufacturersWebClient _manufacturers;
+
+        public IndexModel(
+            IProductsWebClient products,
+            ISuppliersWebClient suppliers,
+            IManufacturersWebClient manufacturers,
+            ICategoriesWebClient categories)
         {
-            _webClient = webClient;
-            _suppliersWebClient = suppliersWebClient;
-            _manufacturersWebClient = manufacturersWebClient;
-            _categoriesWebClient = categoriesWebClient;
+            _products = products;
+            _suppliers = suppliers;
+            _manufacturers = manufacturers;
+            _categories = categories;
         }
 
-        public SelectList Suppliers { get; set; }
-
-        public SelectList Manufacturers { get; set; }
-
-        public SelectList Categories { get; set; }
+        public SelectList Suppliers { get; set; } = default!;
+        public SelectList Manufacturers { get; set; } = default!;
+        public SelectList Categories { get; set; } = default!;
 
         [BindProperty(SupportsGet = true)]
-        public bool IsOnlyDiscounted { get; set; } = false;
+        public bool IsOnlyDiscounted { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public GetProductsListRequest GetRequest { get; set; } = new();
 
-        public List<ProductSimpleDTO> Products { get; set; } = new();
-
+        public List<ProductSimpleDTO> Products { get; set; } = [];
 
         public async Task<IActionResult?> OnGet(bool? isReset)
         {
             if (isReset == true)
-                return RedirectToPage("/Products/Index");
-
-            var suppliers = await _suppliersWebClient.GetSuppliersAsync(new());
-            Suppliers = new(suppliers, "Id", "Name");
-
-            var manufacturers = await _manufacturersWebClient.GetManufacturersAsync(new());
-            Manufacturers = new(manufacturers, "Id", "Name");
-
-            var categories = await _categoriesWebClient.GetCategoriesAsync(new());
-            Categories = new(categories, "Id", "Name");
+                return RedirectToPage();
 
             GetRequest.DiscountsOnly = IsOnlyDiscounted ? "true" : "false";
 
-            Products = await _webClient.GetProductsAsync(GetRequest);
+            try
+            {
+                var suppliers = await _suppliers.GetSuppliersAsync(new(), Token);
+                var manufacturers = await _manufacturers.GetManufacturersAsync(new(), Token);
+                var categories = await _categories.GetCategoriesAsync(new(), Token);
+                var products = await _products.GetProductsAsync(GetRequest, Token);
+
+                Suppliers = new SelectList(suppliers, "Id", "Name");
+                Manufacturers = new SelectList(manufacturers, "Id", "Name");
+                Categories = new SelectList(categories, "Id", "Name");
+
+                Products = products;
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
 
             return Page();
         }

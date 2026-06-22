@@ -7,7 +7,7 @@ namespace Services.orders.interfaces
     {
         Task DeleteOrderByIdAsync(int id);
         Task<OrderDTO> GetOrderByIdAsync(int id);
-        Task<List<OrderSimpleDTO>> GetOrdersAsync(GetListRequest req);
+        Task<List<OrderSimpleDTO>> GetOrdersAsync(GetOrdersListRequest req);
         Task<int> GetOrdersCountAsync();
         Task UpdateOrderDeliveryByOrderIdAsync(int id, OrderDeliveryUpdateDTO dto);
         Task UpdateOrderStatusByOrderIdAsync(int id, OrderStatusUpdateDTO dto);
